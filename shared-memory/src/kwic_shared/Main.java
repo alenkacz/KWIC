@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
 	
 	private static String _path = "";
 	private static List<String[]> _linesOfWords = new ArrayList<String[]>();
+	private static List<String> _result = new ArrayList<String>();
 	
 	public static void main(String[] args) {
 		
@@ -44,7 +48,22 @@ public class Main {
 	}
 
 	private static void doCircularShift() {
-		// TODO Auto-generated method stub
+		int length = _linesOfWords.size();
+		List<String> helper = new LinkedList<String>();
+		
+		for( int i = 0; i < length; ++i ) {
+			// iterating through all lines
+			helper = Arrays.asList(_linesOfWords.get(i));
+			
+			for( int j = 0; j < _linesOfWords.get(i).length; ++j ) {
+				// do shifting and save it
+				((LinkedList<String>)helper).addLast(((LinkedList<String>)helper).getFirst());
+				((LinkedList<String>)helper).removeFirst();
+				_result.add(helper.toString());
+			}
+		}
+		
+		// LinkedList, addLast, removeFirst
 		
 	}
 
@@ -54,7 +73,10 @@ public class Main {
 	}
 
 	private static void manageOutput() {
-		// TODO Auto-generated method stub
+		for( int i = 0; i < _result.size(); ++i ) {
+			// printing each line
+			System.out.println(_result.get(i));
+		}
 		
 	}
 
