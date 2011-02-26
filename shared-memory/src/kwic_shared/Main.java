@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,10 +51,12 @@ public class Main {
 
 	private static void doCircularShift() {
 		int length = _linesOfWords.size();
-		List<String> helper = new ArrayList<String>();
+		List<String> helper = null;
 		
 		for( int i = 0; i < length; ++i ) {
 			// iterating through all lines
+			helper = new ArrayList<String>();
+			
 			for( int j = 0; j < _linesOfWords.get(i).length; ++j ) {
 				// array to arraylist
 				helper.add(j,_linesOfWords.get(i)[j]);
@@ -77,7 +80,7 @@ public class Main {
 	}
 
 	private static void doAlphabetization() {
-		Collections.sort(_result);
+		Collections.sort(_result, new IgnoreCaseComparator());
 	}
 
 	private static void manageOutput() {
@@ -92,4 +95,10 @@ public class Main {
 		System.err.println("Run program with one parameter - path of the input file");
         System.exit(1);	
 	}
+}
+
+class IgnoreCaseComparator implements Comparator<String> {
+  public int compare(String s1, String s2) {
+    return s1.compareToIgnoreCase(s2);
+  }
 }
