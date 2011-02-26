@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,27 +50,34 @@ public class Main {
 
 	private static void doCircularShift() {
 		int length = _linesOfWords.size();
-		List<String> helper = new LinkedList<String>();
+		List<String> helper = new ArrayList<String>();
 		
 		for( int i = 0; i < length; ++i ) {
 			// iterating through all lines
-			helper = Arrays.asList(_linesOfWords.get(i));
+			for( int j = 0; j < _linesOfWords.get(i).length; ++j ) {
+				// array to arraylist
+				helper.add(j,_linesOfWords.get(i)[j]);
+			}
 			
 			for( int j = 0; j < _linesOfWords.get(i).length; ++j ) {
-				// do shifting and save it
-				((LinkedList<String>)helper).addLast(((LinkedList<String>)helper).getFirst());
-				((LinkedList<String>)helper).removeFirst();
-				_result.add(helper.toString());
+				// do shifting and saving it
+				String helperWord = helper.get(0); // save first word
+				helper.remove(0);
+				helper.add(helper.size(), helperWord);
+				
+				// building result string
+				String res = "";
+				for( int k = 0; k < helper.size(); k++ ) {
+					res += helper.get(k);
+					if( k != helper.size() - 1 ) { res += " "; } // adding space, not after last one
+				}
+				_result.add(res);
 			}
 		}
-		
-		// LinkedList, addLast, removeFirst
-		
 	}
 
 	private static void doAlphabetization() {
-		// TODO Auto-generated method stub
-		
+		Collections.sort(_result);
 	}
 
 	private static void manageOutput() {
