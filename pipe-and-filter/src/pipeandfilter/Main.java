@@ -18,7 +18,6 @@ public class Main {
     public static void main(String[] args) {
 
 		/*
-			-proč nejde dát na abstract class throws IOException ?
 			- nebylo by lepší, kdyby se všechno spouštělo na konci konstruktoru ->
 			nepsalo by se run a bylo by zajištěný správný pořadí
 		 */
