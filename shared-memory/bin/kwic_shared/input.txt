@@ -1,5 +1,190 @@
-Another Tripoli resident said: 
-Anti-government protesters have 
-disappeared. The streets 
-are quiet. There are many, 
-many deaths
+NAME
+
+xorg.conf - Configuration File for Xorg  
+INTRODUCTION
+
+Xorg supports several mechanisms for supplying/obtaining configuration and run-time parameters: command line options, environment variables, the xorg.conf configuration file, auto-detection, and fallback defaults. When the same information is supplied in more than one way, the highest precedence mechanism is used. The list of mechanisms is ordered from highest precedence to lowest. Note that not all parameters can be supplied via all methods. The available command line options and environment variables (and some defaults) are described in the Xserver(1x) and Xorg(1x) manual pages. Most configuration file parameters, with their defaults, are described below. Driver and module specific configuration parameters are described in the relevant driver or module manual page.  
+DESCRIPTION
+
+Xorg uses a configuration file called xorg.conf for its initial setup. This configuration file is searched for in the following places when the server is started as a normal user:
+/etc/X11/<cmdline>
+/usr/X11R6/etc/X11/<cmdline>
+/etc/X11/$XORGCONFIG
+/usr/X11R6/etc/X11/$XORGCONFIG
+/etc/X11/xorg.conf-4
+/etc/X11/xorg.conf
+/etc/xorg.conf
+/usr/X11R6/etc/X11/xorg.conf.<hostname>
+/usr/X11R6/etc/X11/xorg.conf-4
+/usr/X11R6/etc/X11/xorg.conf
+/usr/X11R6/lib/X11/xorg.conf.<hostname>
+/usr/X11R6/lib/X11/xorg.conf-4
+/usr/X11R6/lib/X11/xorg.conf
+where <cmdline> is a relative path (with no ".." components) specified with the -config command line option, $XORGCONFIG is the relative path (with no ".." components) specified by that environment variable, and <hostname> is the machine's hostname as reported by gethostname(3).
+
+When the Xorg server is started by the "root" user, the config file search locations are as follows:
+
+<cmdline>
+/etc/X11/<cmdline>
+/usr/X11R6/etc/X11/<cmdline>
+$XORGCONFIG
+/etc/X11/$XORGCONFIG
+/usr/X11R6/etc/X11/$XORGCONFIG
+$HOME/xorg.conf
+/etc/X11/xorg.conf-4
+/etc/X11/xorg.conf
+/etc/xorg.conf
+/usr/X11R6/etc/X11/xorg.conf.<hostname>
+/usr/X11R6/etc/X11/xorg.conf-4
+/usr/X11R6/etc/X11/xorg.conf
+/usr/X11R6/lib/X11/xorg.conf.<hostname>
+/usr/X11R6/lib/X11/xorg.conf-4
+/usr/X11R6/lib/X11/xorg.conf
+where <cmdline> is the path specified with the -config command line option (which may be absolute or relative), $XORGCONFIG is the path specified by that environment variable (absolute or relative), $HOME is the path specified by that environment variable (usually the home directory), and <hostname> is the machine's hostname as reported by gethostname(3).
+
+The xorg.conf file is composed of a number of sections which may be present in any order. Each section has the form:
+
+Section  N'34'SectionNameN'34'
+    SectionEntry
+    ...
+EndSection
+The section names are:
+
+Files          File pathnames
+ServerFlags    Server flags
+Module         Dynamic module loading
+InputDevice    Input device description
+Device         Graphics device description
+VideoAdaptor   Xv video adaptor description
+Monitor        Monitor description
+Modes          Video modes descriptions
+Screen         Screen configuration
+ServerLayout   Overall layout
+DRI            DRI-specific configuration
+Vendor         Vendor-specific configuration
+The following obsolete section names are still recognised for compatibility purposes. In new config files, the InputDevice section should be used instead.
+
+Keyboard       Keyboard configuration
+Pointer        Pointer/mouse configuration
+The old XInput section is no longer recognised.
+
+The ServerLayout sections are at the highest level. They bind together the input and output devices that will be used in a session. The input devices are described in the InputDevice sections. Output devices usually consist of multiple independent components (e.g., and graphics board and a monitor). These multiple components are bound together in the Screen sections, and it is these that are referenced by the ServerLayout section. Each Screen section binds together a graphics board and a monitor. The graphics boards are described in the Device sections, and the monitors are described in the Monitor sections.
+
+Config file keywords are case-insensitive, and "_" characters are ignored. Most strings (including Option names) are also case-insensitive, and insensitive to white space and "_" characters.
+
+Each config file entry usually takes up a single line in the file. They consist of a keyword, which is possibly followed by one or more arguments, with the number and types of the arguments depending on the keyword. The argument types are:
+
+Integer     an integer number in decimal, hex or octal
+Real        a floating point number
+String      a string enclosed in double quote marks (N'34')
+Note: hex integer values must be prefixed with "0x", and octal values with "0".
+
+A special keyword called Option may be used to provide free-form data to various components of the server. The Option keyword takes either one or two string arguments. The first is the option name, and the optional second argument is the option value. Some commonly used option value types include:
+
+Integer     an integer number in decimal, hex or octal
+Real        a floating point number
+String      a sequence of characters
+Boolean     a boolean value (see below)
+Frequency   a frequency value (see below)
+Note that all Option values, not just strings, must be enclosed in quotes.
+
+Boolean options may optionally have a value specified. When no value is specified, the option's value is TRUE. The following boolean option values are recognised as TRUE:
+
+1, on, true, yes
+and the following boolean option values are recognised as FALSE:
+
+0, off, false, no
+If an option name is prefixed with N'34'NoN'34', then the option value is negated.
+
+Example: the following option entries are equivalent:
+
+Option N'34'AccelN'34'   N'34'OffN'34'
+Option N'34'NoAccelN'34'
+Option N'34'NoAccelN'34' N'34'OnN'34'
+Option N'34'AccelN'34'   N'34'falseN'34'
+Option N'34'AccelN'34'   N'34'noN'34'
+Frequency option values consist of a real number that is optionally followed by one of the following frequency units:
+
+Hz, k, kHz, M, MHz
+When the unit name is omitted, the correct units will be determined from the value and the expectations of the appropriate range of the value. It is recommended that the units always be specified when using frequency option values to avoid any errors in determining the value.  
+
+FILES SECTION
+
+The Files section is used to specify some path names required by the server. Some of these paths can also be set from the command line (see Xserver(1x) and Xorg(1x)). The command line settings override the values specified in the config file. The Files section is optional, as are all of the entries that may appear in it.
+The entries that can appear in this section are:
+
+FontPath N'34'pathN'34'
+sets the search path for fonts. This path is a comma separated list of font path elements which the Xorg server searches for font databases. Multiple FontPath entries may be specified, and they will be concatenated to build up the fontpath used by the server. Font path elements may be either absolute directory paths, or a font server identifier. Font server identifiers have the form:
+<trans>/<hostname>:<port-number>
+where <trans> is the transport type to use to connect to the font server (e.g., unix for UNIX-domain sockets or tcp for a TCP/IP connection), <hostname> is the hostname of the machine running the font server, and <port-number> is the port number that the font server is listening on (usually 7100).
+When this entry is not specified in the config file, the server falls back to the compiled-in default font path, which contains the following font path elements:
+
+/usr/X11R6/lib/X11/fonts/misc/
+/usr/X11R6/lib/X11/fonts/Speedo/
+/usr/X11R6/lib/X11/fonts/Type1/
+/usr/X11R6/lib/X11/fonts/CID/
+/usr/X11R6/lib/X11/fonts/75dpi/
+/usr/X11R6/lib/X11/fonts/100dpi/
+The recommended font path contains the following font path elements:
+
+/usr/X11R6/lib/X11/fonts/local/
+/usr/X11R6/lib/X11/fonts/misc/
+/usr/X11R6/lib/X11/fonts/75dpi/:unscaled
+/usr/X11R6/lib/X11/fonts/100dpi/:unscaled
+/usr/X11R6/lib/X11/fonts/Type1/
+/usr/X11R6/lib/X11/fonts/CID/
+/usr/X11R6/lib/X11/fonts/Speedo/
+/usr/X11R6/lib/X11/fonts/75dpi/
+/usr/X11R6/lib/X11/fonts/100dpi/
+Font path elements that are found to be invalid are removed from the font path when the server starts up.
+
+RGBPath N'34'pathN'34'
+sets the path name for the RGB color database. When this entry is not specified in the config file, the server falls back to the compiled-in default RGB path, which is:
+/usr/X11R6/lib/X11/rgb
+Note that an implicit .txt is added to this path if the server was compiled to use text rather than binary format RGB color databases.
+
+ModulePath N'34'pathN'34'
+sets the search path for loadable Xorg server modules. This path is a comma separated list of directories which the Xorg server searches for loadable modules loading in the order specified. Multiple ModulePath entries may be specified, and they will be concatenated to build the module search path used by the server.
+ 
+SERVERFLAGS SECTION
+
+The ServerFlags section is used to specify some global Xorg server options. All of the entries in this section are Options, although for compatibility purposes some of the old style entries are still recognised. Those old style entries are not documented here, and using them is discouraged. The ServerFlags section is optional, as are the entries that may be specified in it.
+Options specified in this section (with the exception of the N'34'DefaultServerLayoutN'34' Option) may be overridden by Options specified in the active ServerLayout section. Options with command line equivalents are overridden when their command line equivalent is used. The options recognised by this section are:
+
+Option N'34'DefaultServerLayoutN'34' N'34'layout-idN'34'
+This specifies the default ServerLayout section to use in the absence of the -layout command line option.
+Option N'34'NoTrapSignalsN'34' N'34'booleanN'34'
+This prevents the Xorg server from trapping a range of unexpected fatal signals and exiting cleanly. Instead, the Xorg server will die and drop core where the fault occurred. The default behaviour is for the Xorg server to exit cleanly, but still drop a core file. In general you never want to use this option unless you are debugging an Xorg server problem and know how to deal with the consequences.
+Option N'34'DontVTSwitchN'34' N'34'booleanN'34'
+This disallows the use of the Ctrl+Alt+Fn sequence (where Fn refers to one of the numbered function keys). That sequence is normally used to switch to another N'34'virtual terminalN'34' on operating systems that have this feature. When this option is enabled, that key sequence has no special meaning and is passed to clients. Default: off.
+Option N'34'DontZapN'34' N'34'booleanN'34'
+This disallows the use of the Ctrl+Alt+Backspace sequence. That sequence is normally used to terminate the Xorg server. When this option is enabled, that key sequence has no special meaning and is passed to clients. Default: off.
+Option N'34'DontZoomN'34' N'34'booleanN'34'
+This disallows the use of the Ctrl+Alt+Keypad-Plus and Ctrl+Alt+Keypad-Minus sequences. These sequences allows you to switch between video modes. When this option is enabled, those key sequences have no special meaning and are passed to clients. Default: off.
+Option N'34'DisableVidModeExtensionN'34' N'34'booleanN'34'
+This disables the parts of the VidMode extension used by the xvidtune client that can be used to change the video modes. Default: the VidMode extension is enabled.
+Option N'34'AllowNonLocalXvidtuneN'34' N'34'booleanN'34'
+This allows the xvidtune client (and other clients that use the VidMode extension) to connect from another host. Default: off.
+Option N'34'DisableModInDevN'34' N'34'booleanN'34'
+This disables the parts of the Xorg-Misc extension that can be used to modify the input device settings dynamically. Default: that functionality is enabled.
+Option N'34'AllowNonLocalModInDevN'34' N'34'booleanN'34'
+This allows a client to connect from another host and change keyboard and mouse settings in the running server. Default: off.
+Option N'34'AllowMouseOpenFailN'34' N'34'booleanN'34'
+This allows the server to start up even if the mouse device can't be opened/initialised. Default: false.
+Option N'34'VTInitN'34' N'34'commandN'34'
+Runs command after the VT used by the server has been opened. The command string is passed to "/bin/sh -c", and is run with the real user's id with stdin and stdout set to the VT. The purpose of this option is to allow system dependent VT initialisation commands to be run. This option should rarely be needed. Default: not set.
+Option N'34'VTSysReqN'34' N'34'booleanN'34'
+enables the SYSV-style VT switch sequence for non-SYSV systems which support VT switching. This sequence is Alt-SysRq followed by a function key (Fn). This prevents the Xorg server trapping the keys used for the default VT switch sequence, which means that clients can access them. Default: off.
+Option N'34'XkbDisableN'34' N'34'booleanN'34'
+disable/enable the XKEYBOARD extension. The -kb command line option overrides this config file option. Default: XKB is enabled.
+Option N'34'BlankTimeN'34' N'34'timeN'34'
+sets the inactivity timeout for the blanking phase of the screensaver. time is in minutes. This is equivalent to the Xorg server's `-s' flag, and the value can be changed at run-time with xset(1x). Default: 10 minutes.
+Option N'34'StandbyTimeN'34' N'34'timeN'34'
+sets the inactivity timeout for the "standby" phase of DPMS mode. time is in minutes, and the value can be changed at run-time with xset(1x). Default: 20 minutes. This is only suitable for VESA DPMS compatible monitors, and may not be supported by all video drivers. It is only enabled for screens that have the N'34'DPMSN'34' option set (see the MONITOR section below).
+Option N'34'SuspendTimeN'34' N'34'timeN'34'
+sets the inactivity timeout for the "suspend" phase of DPMS mode. time is in minutes, and the value can be changed at run-time with xset(1x). Default: 30 minutes. This is only suitable for VESA DPMS compatible monitors, and may not be supported by all video drivers. It is only enabled for screens that have the N'34'DPMSN'34' option set (see the MONITOR section below).
+Option N'34'OffTimeN'34' N'34'timeN'34'
+sets the inactivity timeout for the "off" phase of DPMS mode. time is in minutes, and the value can be changed at run-time with xset(1x). Default: 40 minutes. This is only suitable for VESA DPMS compatible monitors, and may not be supported by all video drivers. It is only enabled for screens that have the N'34'DPMSN'34' option set (see the MONITOR section below).
+Option N'34'PixmapN'34' N'34'bppN'34'
+This sets the pixmap format to use for depth 24. Allowed values for bpp are 24 and 32. Default: 32 unless driver constraints don't allow this (which is rare). Note: some clients don't behave well when this value is set to 24.
+Option N'34'PC98N'34' N'34'booleanN'34'
