@@ -51,30 +51,22 @@ public class Main {
 
 	private static void doCircularShift() {
 		int length = _linesOfWords.size();
-		List<String> helper = null;
 		
-		for( int i = 0; i < length; ++i ) {
+		for( int u = 0; u < length; ++u ) {
 			// iterating through all lines
-			helper = new ArrayList<String>();
 			
-			for( int j = 0; j < _linesOfWords.get(i).length; ++j ) {
-				// array to arraylist
-				helper.add(j,_linesOfWords.get(i)[j]);
-			}
+			String[] words = _linesOfWords.get(u);
 			
-			for( int j = 0; j < _linesOfWords.get(i).length; ++j ) {
-				// do shifting and saving it
-				String helperWord = helper.get(0); // save first word
-				helper.remove(0);
-				helper.add(helper.size(), helperWord);
-				
-				// building result string
-				String res = "";
-				for( int k = 0; k < helper.size(); k++ ) {
-					res += helper.get(k);
-					if( k != helper.size() - 1 ) { res += " "; } // adding space, not after last one
+			for (int i = 0; i < words.length; i++) {
+				String string = words[i] + " "; // "first word"
+				for (int j = i+1; j < words.length; j++) { // words after "first word"
+					string += words[j] + " ";
 				}
-				_result.add(res);
+				for (int j = 0; j < i; j++) { // words before "first" word
+					string += words[j] + " ";
+				}
+				
+				_result.add(string);
 			}
 		}
 	}
