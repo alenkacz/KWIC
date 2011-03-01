@@ -8,13 +8,13 @@ public class Main {
 		LineStorage storage = new LineStorage();
 		Input input = new Input();
 		CircularShifter shifter = new CircularShifter();
-		Alphabetizer alphabetizer = new Alphabetizer();
+		Alphabetizer alphabetizer = new Alphabetizer(shifter);
 		Output out = new Output();
 		
 		input.parse(storage,args[0]);
 		shifter.shift(storage);
-		alphabetizer.alpha(shifter);
-		out.print();
+		alphabetizer.alpha();
+		out.print(alphabetizer);
 	}
 	
 	private static void printErrorAndExit() {

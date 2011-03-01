@@ -19,8 +19,7 @@ public class Input {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
-	            String[] words = line.split("\\s"); // spliting line with whitespaces
-	            storage.addLine(words); // and adding it to the list 
+	            storage.addLine(line); // and adding it to the list 
 			}
 		} catch( IOException e ) {
 			printErrorAndExit();
