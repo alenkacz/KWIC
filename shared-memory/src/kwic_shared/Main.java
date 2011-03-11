@@ -30,7 +30,7 @@ public class Main {
 	
 	///////////////// Settings
 	private static final Action action = Action.search;
-	private static final String keyword = "deaths";
+	private static final String keyword = "protesters";
 	private static final int context = 3;
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,24 +142,49 @@ public class Main {
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static List<String> doSearch() {
-		List<Integer> indexes = findWordIndexes();
+		List<Integer> indexes = findWordIndexes(keyword,0,_alphaIndex.length);
 		List<String> res = new ArrayList<String>();
 		
-		//for( Integer i : indexes ) {
-			res.add(getContextForIndex(8));
-		//}
+		for( Integer i : indexes ) {
+			res.add(getContextForIndex(i));
+		}
 		
 		return res;
 	}
 
-	private static List<Integer> findWordIndexes() {
-		// TODO Auto-generated method stub
-		return null;
+	private static List<Integer> findWordIndexes(String text,int left, int right) {
+		List<Integer> indexes = new ArrayList<Integer>();
+		int index = findIndexOfString(text,left,right);
+		
+		if( index == -1 ) {
+			return null; // not found
+		} else {
+			indexes.add(index);
+			//searchPreviousAndNext(); TODO
+		}
+		
+		return indexes;
+	}
+	
+	/**
+	 * Binary search
+	 */
+	private static int findIndexOfString( String text, int left, int right ) {
+		if( left >= right ) return -1;
+		int middle = (left + right)/2;
+		
+		if( text.toLowerCase().compareTo(getWord(_alphaIndex[middle]).toLowerCase()) > 0 ) { // greater
+			return findIndexOfString(text,middle,right);
+		} else if( text.toLowerCase().compareTo(getWord(_alphaIndex[middle]).toLowerCase()) < 0 ) { // lower
+			return findIndexOfString(text,left,middle);
+		} else { // the same
+			return middle;
+		}
 	}
 	
 	private static String getContextForIndex(int i) {
-		int line = _shiftedIndex[i][0];
-		int index = _shiftedIndex[i][1];
+		int line = _shiftedIndex[_alphaIndex[i]][0];
+		int index = _shiftedIndex[_alphaIndex[i]][1];
 		String word =  getWord(line,index);
 		String res = getLeftContext(line,index,context);
 		res += word + " ";
@@ -199,16 +224,17 @@ public class Main {
 		String res = "";
 		int counter = 0;
 		
-		for( String s : left ) {
+		for( int j = (left.length-1); j >= 0; j-- ) {
 			if( counter < context ) {
-				res += s + " ";
+				res = left[j] + " " + res;
 				counter++;
 			}
 		}
 		
 		if( left.length < context && (line-1) >= 0 ) {
 			//not enough words on this line
-			res += getLeftContext(line-1,_linesOfWords.get(line-1).split("\\s").length,context-left.length);
+			res = getLeftContext(line-1,_linesOfWords.get(line-1).length(),context-left.length) 
+				+ res;
 		}
 		return res;
 	}
@@ -245,6 +271,12 @@ public class Main {
 			res += temp;
 		}
 		return res;
+	}
+	
+	private static String getWord( int index ) {
+		int line = _shiftedIndex[index][0];
+		int i = _shiftedIndex[index][1];
+		return getWord(line,i);
 	}
 	
 	private static String getWord( int line, int index ) {
