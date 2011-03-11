@@ -14,8 +14,9 @@ import java.util.List;
 public class Main {
 	
 	private static String _path = "";
-	private static List<String[]> _linesOfWords = new ArrayList<String[]>();
+	private static List<String> _linesOfWords = new ArrayList<String>();
 	private static List<String> _result = new ArrayList<String>();
+	private static int[][] _index;
 	
 	public static void main(String[] args) {
 		
@@ -40,12 +41,15 @@ public class Main {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
-	            String[] words = line.split("\\s"); // spliting line with whitespaces
-	            _linesOfWords.add(words); // and adding it to the list 
+	            // TODO do normalization - clean text from separators and devide it only with one space
+	            if( line != "" ) // skip empty lines
+	            	_linesOfWords.add(line); // and adding it to the list 
 			}
 		} catch( IOException e ) {
 			printErrorAndExit();
 		}
+		
+		buildIndex();
 		
 	}
 
@@ -55,7 +59,7 @@ public class Main {
 		for( int u = 0; u < length; ++u ) {
 			// iterating through all lines
 			
-			String[] words = _linesOfWords.get(u);
+			String[] words = _linesOfWords.get(u).split("\\s");
 			
 			for (int i = 0; i < words.length; i++) {
 				String string = words[i] + " "; // "first word"
@@ -81,6 +85,20 @@ public class Main {
 			System.out.println(_result.get(i));
 		}
 		
+	}
+	
+	private static void buildIndex() {
+		_index = new int[_linesOfWords.size()][];
+		for( int i = 0; i < _linesOfWords.size(); ++i ) {
+			String[] words = _linesOfWords.get(i).split("\\s");
+			_index[i] = new int[words.length];
+			
+			_index[i][0] = 0; // first word is always on position 0 on the row
+			for( int j = 1; j < words.length; ++j ) {
+				// previous index + length of previous word + space
+				_index[i][j] = _index[i][j-1]+words[j-1].length()+1;
+			}
+		}
 	}
 
 	private static void printErrorAndExit() {
