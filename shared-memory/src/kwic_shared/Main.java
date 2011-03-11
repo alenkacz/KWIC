@@ -30,7 +30,7 @@ public class Main {
 	
 	///////////////// Settings
 	private static final Action _action = Action.search;
-	private static final String _keyword = "many";
+	private static final String _keyword = "another";
 	private static final int _context = 3;
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,13 +174,13 @@ public class Main {
 		List<Integer> res = new ArrayList<Integer>();
 		int start = index;
 		
-		while( getWord(_alphaIndex[--start]).toLowerCase().equals(text.toLowerCase()) ) {
+		while( index != 0 && getWord(_alphaIndex[--start]).toLowerCase().equals(text.toLowerCase()) ) {
 			res.add(start);
 		}
 		
 		start = index;
 		
-		while( getWord(_alphaIndex[++start]).toLowerCase().equals(text.toLowerCase()) ) {
+		while( index != (_alphaIndex.length - 1) && getWord(_alphaIndex[++start]).toLowerCase().equals(text.toLowerCase()) ) {
 			res.add(start);
 		}
 		
