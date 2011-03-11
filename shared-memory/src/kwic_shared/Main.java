@@ -24,6 +24,7 @@ public class Main {
 	private static String[] _keywords;
 	private static Integer[] _alphaIndex;
 	private static final String[] _noiseWords = {"a","the","is"};
+	private static final char[] _separators = {',','.',':','-'};
 	
 	private enum Action {search, print};
 	
@@ -59,8 +60,8 @@ public class Main {
 		try {
 			while ((line = reader.readLine()) != null) {
 	            // TODO do normalization - clean text from separators and devide it only with one space
-	            if( line != "" ) { // skip empty lines 
-	            	_linesOfWords.add(line); // and adding it to the list 
+	            if( !line.equals("") ) { // skip empty lines 
+	            	_linesOfWords.add(cleanWord(line.trim())); // and adding it to the list 
 	            }
 			}
 		} catch( IOException e ) {
@@ -129,22 +130,121 @@ public class Main {
 	}
 	
 	private static void printOutContext() {
+		List<String> res = doSearch();
 		
+		for( String s : res ) {
+			System.out.println(s);
+		}
 	}
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////  SEARCH  ///////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private static List<String> doSearch() {
+		List<Integer> indexes = findWordIndexes();
+		List<String> res = new ArrayList<String>();
+		
+		//for( Integer i : indexes ) {
+			res.add(getContextForIndex(8));
+		//}
+		
+		return res;
+	}
+
+	private static List<Integer> findWordIndexes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private static String getContextForIndex(int i) {
+		int line = _shiftedIndex[i][0];
+		int index = _shiftedIndex[i][1];
+		String word =  getWord(line,index);
+		String res = getLeftContext(line,index,context);
+		res += word + " ";
+		res += getRightContext(line,index+word.length()+1,context);
+		
+		return res;
+	}
+	
+	private static String getRightContext(int line, int index, int context) {
+		String res = "";
+		if( index <  _linesOfWords.get(line).length()) {
+			String[] right = _linesOfWords.get(line).substring(index).split("\\s");
+			int counter = 0;
+			
+			for( String s : right ) {
+				if( counter < context ) {
+					res += s + " ";
+					counter++;
+				}
+			}
+			
+			if( right.length < context && (line+1) < _linesOfWords.size() ) {
+				//not enough words on this line
+				res += getRightContext(line+1,0,context-right.length);
+			}
+		} else { // started at the end of line
+			if ((line+1) < _linesOfWords.size()) {
+				res += getRightContext(line+1,0,context);
+			}
+		}
+		
+		return res;
+	}
+
+	private static String getLeftContext(int line, int index, int context) {
+		String[] left = _linesOfWords.get(line).substring(0,index).split("\\s");
+		String res = "";
+		int counter = 0;
+		
+		for( String s : left ) {
+			if( counter < context ) {
+				res += s + " ";
+				counter++;
+			}
+		}
+		
+		if( left.length < context && (line-1) >= 0 ) {
+			//not enough words on this line
+			res += getLeftContext(line-1,_linesOfWords.get(line-1).split("\\s").length,context-left.length);
+		}
+		return res;
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////  HELPERS ///////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	private static boolean isNoiseWord(String word) {
 		for( String s : _noiseWords ) {
-			if( word.equals(s) ) return true;
+			if( word.toLowerCase().equals(s) ) return true;
 		}
 		return false;
+	}
+	
+	private static String cleanWord(String s) {
+		String res = "";
+		String[] parts = s.split("\\s");
+		boolean first = true;
+		
+		for( String part : parts ) {
+			String temp = part;
+			for( char sep : _separators ) {
+				if( part.charAt(0) == sep ) { //first one
+					temp = part.substring(1);
+				}
+				
+				if( part.charAt(part.length()-1) == sep ) { //last one
+					temp = part.substring(0,part.length()-1);
+				}
+			}
+			if( !first ) { res += " "; }
+			first = false;
+			res += temp;
+		}
+		return res;
 	}
 	
 	private static String getWord( int line, int index ) {
@@ -171,11 +271,11 @@ public class Main {
 			_index[i] = new int[words.length];
 			
 			_index[i][0] = 0; // first word is always on position 0 on the row
-			++_wordsCount; // counter of words in the whole document
+			if( !isNoiseWord(words[0]) )++_wordsCount; // counter of words in the whole document
 			for( int j = 1; j < words.length; ++j ) {
 				// previous index + length of previous word + space
 				_index[i][j] = _index[i][j-1]+words[j-1].length()+1;
-				++_wordsCount;
+				if( !isNoiseWord(words[j]) )++_wordsCount;
 			}
 		}
 	}
