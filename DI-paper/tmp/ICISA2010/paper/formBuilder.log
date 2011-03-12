@@ -1,0 +1,462 @@
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  13 FEB 2011 13:44
+entering extended mode
+ restricted \write18 enabled.
+ Source specials enabled.
+ %&-line parsing enabled.
+**formBuilder.tex
+(./formBuilder.tex
+LaTeX2e <2009/09/24>
+Babel <v3.8l> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2009-06-19, ngerman-x-2009-06-19, ancientgreek, ibycus, arabic, armenian
+, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danish, dutch, u
+kenglish, usenglishmax, esperanto, estonian, farsi, finnish, french, galician, 
+german, ngerman, swissgerman, monogreek, greek, hungarian, icelandic, assamese,
+ bengali, gujarati, hindi, kannada, malayalam, marathi, oriya, panjabi, tamil, 
+telugu, indonesian, interlingua, irish, italian, kurmanji, lao, latin, latvian,
+ lithuanian, mongolian, mongolianlmc, bokmal, nynorsk, polish, portuguese, roma
+nian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, turkish,
+ turkmen, ukrainian, uppersorbian, welsh, loaded.
+(./IEEEtran.cls
+Document Class: IEEEtran 2007/03/05 V1.7a by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+\@IEEEtrantmpdimenA=\dimen102
+\@IEEEtrantmpdimenB=\dimen103
+\@IEEEtrantmpcountA=\count79
+\@IEEEtrantmpcountB=\count80
+\@IEEEtrantmptoksA=\toks14
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 366.
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+-- Using 210mm x 297mm (a4) paper.
+-- Using PDF output.
+\@IEEEnormalsizeunitybaselineskip=\dimen104
+-- This is a 10 point document.
+\CLASSINFOnormalsizebaselineskip=\dimen105
+\CLASSINFOnormalsizeunitybaselineskip=\dimen106
+\IEEEnormaljot=\dimen107
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+\IEEEilabelindentA=\dimen108
+\IEEEilabelindentB=\dimen109
+\IEEEilabelindent=\dimen110
+\IEEEelabelindent=\dimen111
+\IEEEdlabelindent=\dimen112
+\IEEElabelindent=\dimen113
+\IEEEiednormlabelsep=\dimen114
+\IEEEiedmathlabelsep=\dimen115
+\IEEEiedtopsep=\skip41
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@IEEEsubequation=\count85
+\abovecaptionskip=\skip42
+\belowcaptionskip=\skip43
+\c@figure=\count86
+\c@table=\count87
+\@IEEEeqnnumcols=\count88
+\@IEEEeqncolcnt=\count89
+\@IEEEtmpitemindent=\dimen116
+\c@IEEEbiography=\count90
+\@IEEEtranrubishbin=\box26
+) (/usr/local/texlive/2010/texmf-dist/tex/latex/listings/listings.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+\lst@mode=\count91
+\lst@gtempboxa=\box27
+\lst@token=\toks16
+\lst@length=\count92
+\lst@currlwidth=\dimen117
+\lst@column=\count93
+\lst@pos=\count94
+\lst@lostspace=\dimen118
+\lst@width=\dimen119
+\lst@newlines=\count95
+\lst@lineno=\count96
+\lst@maxwidth=\dimen120
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count97
+\lst@skipnumbers=\count98
+\lst@framebox=\box28
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2010/02/14 v0.04n Graphics/color for pdfTeX
+\Gread@gobject=\count99
+))
+\Gin@req@height=\dimen121
+\Gin@req@width=\dimen122
+)
+(./formBuilder.aux)
+\openout1 = `formBuilder.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 297.
+LaTeX Font Info:    ... okay on input line 297.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 297.
+LaTeX Font Info:    ... okay on input line 297.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 297.
+LaTeX Font Info:    ... okay on input line 297.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 297.
+LaTeX Font Info:    ... okay on input line 297.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 297.
+LaTeX Font Info:    ... okay on input line 297.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 297.
+LaTeX Font Info:    ... okay on input line 297.
+\c@lstlisting=\count100
+
+(/usr/local/texlive/2010/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count101
+\scratchdimen=\dimen123
+\scratchbox=\box29
+\nofMPsegments=\count102
+\nofMParguments=\count103
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count104
+\MPscratchDim=\dimen124
+\MPnumerator=\count105
+\everyMPtoPDFconversion=\toks18
+) (/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2010/04/01 v0.9 Utility functions of pdfTeX for LuaTeX (HO)
+
+
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/message (HO)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2010/04/26 v1.7 LaTeX kernel commands for general use (HO)
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2007/09/30 v1.0 Managing graphics extensions (HO)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2010/02/22 v3.7 Keyval support for LaTeX options (HO)
+
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2010/03/01 v1.9 Key value parser (HO)
+
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2010/01/28 v1.3 Prefix for e-TeX command names (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.jpeg,.png,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 436.
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Underfull \hbox (badness 2042) in paragraph at lines 404--420
+[][]\OT1/ptm/m/n/10 The main idea be-hind the model-driven de-vel-op-ment
+ []
+
+<../png/1-PersonCarSimple.png, id=1, 269.005pt x 123.46124pt>
+File: ../png/1-PersonCarSimple.png Graphic file (type png)
+
+<use ../png/1-PersonCarSimple.png>
+<../png/2-exmaple2.png, id=2, 444.66125pt x 206.7725pt>
+File: ../png/2-exmaple2.png Graphic file (type png)
+
+<use ../png/2-exmaple2.png> [1{/usr/local/texlive/2010/texmf-var/fonts/map/pdft
+ex/updmap/pdftex.map}
+
+
+ <../png/1-PersonCarSimple.png (PNG copy)> <../png/2-exmaple2.png (PNG copy)>] 
+<../png/3-exampleRich.png, id=12, 461.725pt x 234.8775pt>
+File: ../png/3-exampleRich.png Graphic file (type png)
+
+<use ../png/3-exampleRich.png>
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 543.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 543.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 545.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 545.
+ [2 <../png/3-exampleRich.png (PNG copy)>]
+<../png/5-JPA.png, id=16, 458.71375pt x 353.32pt>
+File: ../png/5-JPA.png Graphic file (type png)
+ <use ../png/5-JPA.png>
+Underfull \hbox (badness 10000) in paragraph at lines 762--763
+[][]\OT1/ptm/m/n/8 T ex-tends
+ []
+
+
+Overfull \hbox (4.76723pt too wide) in paragraph at lines 779--779
+[][]\OT1/ptm/m/n/8 @Enumerated| 
+ []
+
+
+Overfull \hbox (4.51245pt too wide) in paragraph at lines 780--780
+[][]\OT1/ptm/m/n/8 Enumerated| 
+ []
+
+
+Underfull \hbox (badness 5756) in paragraph at lines 791--792
+[][]\OT1/ptm/m/n/8 Database type  Date,
+ []
+
+[3 <../png/5-JPA.png (PNG copy)>]
+<../png/6-HibernateValidator.png, id=20, 423.5825pt x 480.79625pt>
+File: ../png/6-HibernateValidator.png Graphic file (type png)
+
+<use ../png/6-HibernateValidator.png>
+Overfull \hbox (2.91743pt too wide) in paragraph at lines 876--876
+[]\OT1/ptm/m/n/8 Stereotype| 
+ []
+
+
+Overfull \hbox (2.38974pt too wide) in paragraph at lines 876--877
+[]\OT1/ptm/m/n/8 Applicability| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 901--902
+[][]\OT1/ptm/m/n/8 Collection,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 916--917
+[][]\OT1/ptm/m/n/8 Numeric,
+ []
+
+
+Overfull \hbox (5.74983pt too wide) in paragraph at lines 918--918
+[][]\OT1/ptm/m/n/8 @CreditCard-
+ []
+
+
+Overfull \hbox (6.91734pt too wide) in paragraph at lines 919--919
+[][]\OT1/ptm/m/n/8 CreditCard-
+ []
+
+
+Overfull \hbox (0.87001pt too wide) in paragraph at lines 948--948
+[][]\OT1/ptm/m/n/8 @NotEmpty| 
+ []
+
+
+Overfull \hbox (2.03752pt too wide) in paragraph at lines 949--949
+[][]\OT1/ptm/m/n/8 NotEmpty| 
+ []
+
+
+Overfull \hbox (4.74174pt too wide) in paragraph at lines 953--953
+[][]\OT1/ptm/m/n/8 @AssertFalse| 
+ []
+
+
+Overfull \hbox (5.90926pt too wide) in paragraph at lines 954--954
+[][]\OT1/ptm/m/n/8 AssertFalse| 
+ []
+
+
+Overfull \hbox (2.79788pt too wide) in paragraph at lines 958--958
+[][]\OT1/ptm/m/n/8 @AssertTrue| 
+ []
+
+
+Overfull \hbox (3.9654pt too wide) in paragraph at lines 959--959
+[][]\OT1/ptm/m/n/8 AssertTrue| 
+ []
+
+[4 <../png/6-HibernateValidator.png (PNG copy)>]
+<../png/7-FormBuilder.png, id=24, 396.48125pt x 310.15875pt>
+File: ../png/7-FormBuilder.png Graphic file (type png)
+
+<use ../png/7-FormBuilder.png>
+Overfull \hbox (1.39514pt too wide) in paragraph at lines 1035--1035
+[][]\OT1/ptm/m/n/8 @InputLength| 
+ []
+
+
+Overfull \hbox (2.5631pt too wide) in paragraph at lines 1036--1036
+[][]\OT1/ptm/m/n/8 InputLength| 
+ []
+
+
+Overfull \hbox (5.20303pt too wide) in paragraph at lines 1075--1075
+[][]\OT1/ptm/m/n/8 @TableColumn| 
+ []
+
+
+Overfull \hbox (6.37099pt too wide) in paragraph at lines 1076--1076
+[][]\OT1/ptm/m/n/8 TableColumn| 
+ []
+
+
+Overfull \hbox (0.58711pt too wide) in paragraph at lines 1081--1081
+[][]\OT1/ptm/m/n/8 CompareTo| 
+ []
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/listings/lstlang2.sty
+File: lstlang2.sty 2004/09/05 1.3 listings language file
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/listings/lstlang3.sty
+File: lstlang3.sty 2004/09/05 1.3 listings language file
+)
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 1175
+.
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <8> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 1176.
+ [5 <../png/7-FormBuilder.png (PNG copy)>]
+<../png/8-Profile.png, id=30, 357.335pt x 354.32375pt>
+File: ../png/8-Profile.png Graphic file (type png)
+
+<use ../png/8-Profile.png>
+<../png/9-RichPersonCar4.png, id=31, 481.8pt x 383.4325pt>
+File: ../png/9-RichPersonCar4.png Graphic file (type png)
+
+<use ../png/9-RichPersonCar4.png>
+(/usr/local/texlive/2010/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+) [6 <../png/8-Profile.png (PNG copy)> <../png/9-RichPersonCar4.png>]
+<../png/10-CarGUI.png, id=37, 325.215pt x 189.70876pt>
+File: ../png/10-CarGUI.png Graphic file (type png)
+
+<use ../png/10-CarGUI.png> [7 <../png/10-CarGUI.png (PNG copy)>]
+Missing character: There is no ï in font ptmr7t!
+Missing character: There is no ¿ in font ptmr7t!
+Missing character: There is no ½ in font ptmr7t!
+Missing character: There is no ï in font ptmr7t!
+Missing character: There is no ¿ in font ptmr7t!
+Missing character: There is no ½ in font ptmr7t!
+Missing character: There is no ï in font ptmr7t!
+Missing character: There is no ¿ in font ptmr7t!
+Missing character: There is no ½ in font ptmr7t!
+
+Underfull \hbox (badness 10000) in paragraph at lines 1787--1790
+[][]\OT1/ptm/m/n/8 JSR 220: En-ter-prise Jav-aBeansTM. Ver-sion 3.0. Java
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1787--1790
+\OT1/ptm/m/n/8 Per-sis-tence API, Linda DeMichiel and Michael Keith, 2006.
+ []
+
+
+Underfull \hbox (badness 1577) in paragraph at lines 1791--1792
+[][]\OT1/ptm/m/n/8 Hibernate Val-ida-tor, open source val-i-da-tion li-brary fo
+r Hi-ber-nate
+ []
+
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+[8] (./formBuilder.aux) ) 
+Here is how much of TeX's memory you used:
+ 3647 strings out of 493747
+ 56246 string characters out of 3143546
+ 205232 words of memory out of 3000000
+ 6896 multiletter control sequences out of 15000+200000
+ 40463 words of font info for 78 fonts, out of 3000000 for 9000
+ 718 hyphenation exceptions out of 8191
+ 37i,9n,41p,258b,1014s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2010/texmf-dist/fonts/enc/dvips/ba
+se/8r.enc}</usr/local/texlive/2010/texmf-dist/fonts/type1/urw/courier/ucrb8a.pf
+b></usr/local/texlive/2010/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/
+local/texlive/2010/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texl
+ive/2010/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2010/
+texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2010/texmf-dist
+/fonts/type1/urw/times/utmri8a.pfb>
+Output written on formBuilder.pdf (8 pages, 266097 bytes).
+PDF statistics:
+ 67 PDF objects out of 1000 (max. 8388607)
+ 40 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+
