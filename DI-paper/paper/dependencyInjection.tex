@@ -407,7 +407,7 @@ showspaces=false,
 basewidth={0.55em,0.4em},            
 showstringspaces=false,         
 showtabs=false,                 
-frame=single,	                
+frame=none,	                
 tabsize=2,	                
 captionpos=b,               
 breaklines=true,            
@@ -427,18 +427,7 @@ class MovieLister...
 Toto je samozřejmě velmi naivní implementace, ale pro účely našeho příkladu bude postačovat. Metoda uvnitř využívá proměnnou finder, v které je uložena instance jiné třídy, která zajišťuje načítání filmů z úložiště. Nyní se pojďme podívat na způsoby, jak můžeme tuto proměnnou naplnit.
 Nejnaivnější způsob by byl vytvořit konkrétní instanci přímo při vytváření objektu MovieLister:
 
-\lstset{language=Java, caption=Možné naplnění proměnné finder, label=listing:Java,
-stringstyle=\ttfamily, 
-basicstyle=\footnotesize\ttfamily,                      
-showspaces=false,   
-basewidth={0.55em,0.4em},            
-showstringspaces=false,         
-showtabs=false,                 
-frame=single,	                
-tabsize=2,	                
-captionpos=b,               
-breaklines=true,            
-breakatwhitespace=false}
+\lstset{language=Java, caption=Možné naplnění proměnné finder, label=listing:Java}
 \begin{lstlisting}
 class MovieLister...
   private ColonDelimitedMovieFinder finder;
