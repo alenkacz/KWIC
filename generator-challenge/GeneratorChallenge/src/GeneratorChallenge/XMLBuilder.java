@@ -4,9 +4,7 @@ import java.io.StringWriter;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -22,7 +20,7 @@ public class XMLBuilder {
 
 	public String generate(Form form) {
 		this.form = form;
-		Element root = doc.createElement("form");
+		Element root = doc.createElement("h:form");
 		root.setAttribute("id", "form" + form.getId());
 		
 		for( Input i : form.getInputs() ) {
@@ -35,19 +33,21 @@ public class XMLBuilder {
 	}
 	
 	private Element parseInput(Input i) {
-		Element res = doc.createElement(i.getType());
+		Element res = doc.createElement("input" + i.getType());
 		
 		res.setAttribute("label", i.getName());
-		res.setAttribute("value","#{bean." + i.getName() + "}");
+		res.setAttribute("value","#{bean." + i.getName().toLowerCase() + "}");
 		res.setAttribute("title","#{text[t." + form.getId().toLowerCase() + "." + i.getName());
-		res.setAttribute("renderer","#{empty " + i.getName() + "Renderer ? 'true' : " + i.getName() + "Renderer }");
-		res.setAttribute("id","#{prefix}" + i.getName());
-		if( i.getLength() != -1 )  {
-			res.setAttribute("minlength", "0");
-			res.setAttribute("maxlength", String.valueOf(i.getLength()));
-		}
+		res.setAttribute("renderer","#{empty " + i.getName() + "Render ? 'true' : " + i.getName() + "Render }");
+		res.setAttribute("id","#{prefix}" + i.getName().toLowerCase());
 		if( i.isRequired() != null ) res.setAttribute("required", String.valueOf(i.isRequired()));
-		if( i.getType().toLowerCase().equals("text") ) { res.setAttribute("size", "30"); }
+		if( i.getType().toLowerCase().equals("text") ) { 
+			res.setAttribute("size", "30");
+			if( i.getLength() != Input.LENGTH_EMPTY )  {
+				res.setAttribute("minlength", "0");
+				res.setAttribute("maxlength", String.valueOf(i.getLength()));
+			}
+		}
 		
 		return res;
 	}
