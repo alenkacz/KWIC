@@ -603,7 +603,7 @@ Pokud se podíváme na objekty, které tvoří naši aplikaci, můžeme zde nal�
 Pokud se podíváme na náš předchozí příklad, tak MovieLister jasně spadá do skupiny Services a ve svém konstruktoru si žádá pouze MovieFinder. Movie Finder spadá také do skupiny Services, ale v konstruktoru požaduje textový řetězec reprezentující název souboru. Jde sice o datový typ string, tzn. spadající do skupiny Value Object, ale tak, jak je příklad napsán, je tento parametr neměnný, a to znamená, že může být uveden přímo v konfiguračním souboru a je tedy přístupný už ve fázi, kdy kontejner skládá objekty dohromady.
 Pro další ukázky budeme potřebovat více Value Objects, takže ve třídě MovieFinder budeme místo stringu požadovat objekt File:
 
-\lstset{language=Java, caption=Naplnění proměnné finder s využitím interface, label=listing:Java}
+\lstset{language=Java, caption=Value Object jako parametr v konstruktoru, label=listing:Java}
 \begin{lstlisting}
 class MovieFinder...
   public MovieFinder(File file) {
@@ -618,7 +618,7 @@ class File...
 
 Pokud bychom nyní chtěli opět pro vybudování aplikace použít kontejner, tak bychom ho museli naučit, jak objekt File vybudovat. K tomu jsou určeny Factory třídy:
 
-\lstset{language=Java, caption=Naplnění proměnné finder s využitím interface, label=listing:Java}
+\lstset{language=Java, caption=Factory třída pro Value Object, label=listing:Java}
 \begin{lstlisting}
 class FileFactory...
   public File create(String filename) {
@@ -712,6 +712,30 @@ public ConstructorBasedCabAgency(AirlineAgency airlineAgency) {  this.airlineAge
 Třída ConstructorBasedCabAgency je tedy závislá na rozhraní AirlineAgency a zároveň ConstructorBasedTripPlanner je závislý na CabAgency a také AirlineAgency.
 PicoContainer rozhoduje závislosti prohlížením jednotlivých konstruktorů, přičemž jednotlivé služby se u něj registrují prostřednictvím implementovaných tříd, klient si ovšem o službu říká prostřednictvím názvu rozhraní. PicoContainer následně traverzuje celou implementační hierarchií rozhraní a vybere nejvhodnější třídu.
 U předešlého příkladu je tedy TripPlanner závislý na AirlineAgency a CabAgency a AirlineAgency a CabAgency jsou závislé na TripPlanner. PicoContainer tedy nejprve nainstancuje AirlineAgency, předá referenci konstruktoru CabAgency a poté předá CabAgency i AirlineAgency při vytváření TripPlanneru. Celou tuto sekvenci vyvoláme následujícím příkazem: pico.getComponentInstanceOfType(TripPlanner.class).
+
+\section{Service locator}
+
+Alternativní implementací IoC je vzor ServiceLocator (SL), stejně jako DI slouží ke snížení závislostí mezi požadovanou funkčností a konkrétní implementací. Service Locator pracuje tak, že uvnitř sebe (podobný kontejner jako u DI) nese informaci o tom, jaké rozhraní je implementováno jakou třídou. Pokaždé když v nějaké třídě potřebujeme přistoupit k jiné, tak požádáme SL, aby nám vyrobil příslušný objekt. V našem příkladě tedy u třídy MovieLister zmizí závislost na konkrétní implementaci MovieFinder, zůstane závislost na rozhraní MovieFinder a ještě k tomu přibyde závislost na rozhraní Service Locatoru, viz \fig{locator}.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=3.5in]{3-Locator}
+\caption{Zobrazení závislostí při použití Service Locatoru}
+\label{fig:locator}
+\end{figure}
+
+Následuje ukázka, jak by mohl vypadat MovieLister v případě, že je Service Locator implementován jako Singleton. Ten má na sobě definované metody pro přídem a výdej objektů, což nemusí být ideální, ale zde to pro ilustraci postačuje.
+
+\lstset{language=Java, caption=MovieLister při použití Service Locatoru, label=listing:Java}
+\begin{lstlisting}
+class MovieLister ... { 
+  private MovieFinder finder;
+  public MovieLister() {
+    this.finder = ServiceLocator.getMovieFinder();
+  }
+\end{lstlisting}
+
+Rozdílem mezi oběma představenými implementacemi IoC je to, že v případě DI třída pouze deklaruje, která rozhraní potřebuje a to, jakým způsobem a kdy je dostane, tak nijak neovlivňuje. Naopak u tříd využívajících SL vždy voláme kontejner na konkrétním místě. Velkou nevýhodou je také, že každá třída, která SL využívá, tak je závislá na jeho rozhraní (případně můžeme definovat částečná rozhraní pro jednotlivé služby, které SL vydává, ale závislost stejně zůstává). Pokud máme vytvořit nějaké hodně obecné třídy, tak v nich tato závislost zůstane, tak by pro využití s jiným SL kontejnerem musel využít nějaký adaptér. Z hlediska dopadu na kód, které bylo diskutováno v předchozích částech, tak je SL jednoznačně invazivnější než DI. S tím souvisí i čitelnost kódu - u Dependency Injection, zvláště pokud použijeme nejčistší Constructor Injection metodu, tak vidíme zcela přesně všechny závislosti, které třída má na první pohled. U Service Locatoru bychom pro dosažení stejného cíle museli prohlédnout celý kód třídy, protože volání Service Locatoru se může vyskytnout kdekoli v kódu.
 
 % conference papers do not normally have an appendix
 
