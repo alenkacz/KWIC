@@ -654,8 +654,6 @@ Autowiring se tedy snaží použít informace, které jsme již uvedli při psan
 
 \subsection{Konkrétní příklady}
 
-K dispozici je hned několik hotových kontejnerů a to pro všechny různé jazyky a jejich použití a implementace jsou odlišné. Liší se například i v konfiguraci, která je buď napsaná klasicky v kódu (v Javě, PHP atd.) případně v XML. Výběr mezi těmito dvěma typy je hodně o osobních preferencích. XML konfigurace ale může být výhodná například v případě, kdy chceme umožnit administrátorům/uživatelům měnit základní funkcionalitu napojením jiných implementací daných služeb a je pro ně daleko příjemnější upravovat XML soubor, než přímo zdrojový kód.
-
 \subsubsection{Spring}
 
 Při použití Dependency Injection kontejneru, který je součástí Spring frameworku je potřeba všechny třídy, které chceme instancovat nadefinovat v XML souboru, přičemž závislosti mezi službami jsou nadefinovány jako „property“ element. Tyto informace Spring poté použije k zavolání správné „setter“ metody – jedná se totiž o kontejner, který používá Setter injection. Příklad konfiguračního souboru:
