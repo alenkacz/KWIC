@@ -388,11 +388,11 @@ Keywords: Dependency injection, Inversion of control, Dependency injection conta
 \section{Úvod}
 % no \IEEEPARstart
 Návrhový vzor Dependency Injection (DI) slouží pro snížení závislostí mezi jednotlivými částmi systému. Jeho provedení vychází z obecnějšího návrhového vzoru Inversion of Control (IoC) a tyto dva pojmy jsou často zaměňovány.
-IoC je obecný princip, kde upřednostňujeme kontrolu zvenčí daného objektu nad situací, kdy si objekt říká o věci sám z vnitřku – máme tak nad objektem větší kontrolu a také tento návrh umožňuje lepší znovupoužitelnost.
+IoC je obecný princip, kde upřednostňujeme kontrolu zvenčí daného objektu nad situací, kdy si objekt říká o věci sám z vnitřku – máme tak nad objektem větší kontrolu a tento návrh také umožňuje lepší znovupoužitelnost.
 DI je pojem, který poprvé představil Martin Fowler ve svém článku [zdroj], kde popisuje dvě různé implementace IoC pro snížení závislostí mezi komponentami systému – Dependency Injection a Service Locator. Tento článek částečně vychází z tohoto díla.
 
 \section{Princip Dependency injection}
-Základní myšlenkou DI je oddělení místa použití konkrétní implementace a místa, kde se tato implementace instancuje. Nejdříve si představíme vzorový příklad, který budeme následně upravovat. Vzorový příklad je napsát v Javě, ale tyto pravidla jsou obecně použitelná I pro ostatní objektově orientované jazyky.
+Základní myšlenkou DI je oddělení místa použití konkrétní implementace a místa, kde se tato implementace instancuje. Nejdříve si představíme vzorový příklad, který budeme následně upravovat. Vzorový příklad je napsán v Javě, ale tyto pravidla jsou obecně použitelná i pro ostatní objektově orientované jazyky.
 Máme třídu MovieLister, která slouží pro získání filmů a její konkrétní metodu moviesDirectedBy, která slouží pro získání pouze těch filmů, které mají daného režiséra.
 
 \lstset{language=Java, caption=MovieLister naivní implementace, label=listing:Java,
@@ -456,8 +456,7 @@ class MovieLister...
   }
 \end{lstlisting}
 
-Nyní již můžeme do proměnné finder vložit jakoukoli implementaci rozhraní MovieFinder, ale vzhledem k zápisu našeho kódu je do něj opět vždy vkládána jedna konkrétní implentace, takže třída MovieLister má stále dvě závisloti, viz \fig{naive}. Také v současnosti vyžadujeme, aby se soubor, ze kterého budeme filmy načítat, vždy jmenoval movies1.txt, což je velmi silné omezení. Mohli bychom jeho nastavení umožňovat skrze třídu MovieLister, ale to by pak opět podporovalo svázání s danou konkrétní implementací MovieFinder (ostatní implementace vůbec nemusí pracovat se soubory, ale místo toho například s databází).
-
+Nyní již můžeme do proměnné finder vložit jakoukoli implementaci rozhraní MovieFinder, ale vzhledem k zápisu našeho kódu je do něj opět vždy vkládána jedna konkrétní implentace, takže třída MovieLister má stále dvě závislosti, viz \fig{naive}. Současně vyžadujeme, aby se soubor, ze kterého budeme filmy načítat, vždy jmenoval movies1.txt, což je velmi silné omezení. Mohli bychom jeho nastavení umožňovat skrze třídu MovieLister, ale to by pak opět podporovalo svázání s danou konkrétní implementací MovieFinder (ostatní implementace vůbec nemusí pracovat se soubory, ale místo toho například s databází).
 
 \begin{figure}[!b]
 \centering
@@ -466,13 +465,15 @@ Nyní již můžeme do proměnné finder vložit jakoukoli implementaci rozhran�
 \label{fig:naive}
 \end{figure}
 
-Nyní je na čase využít Inversion of Control – pak již nebude třída MovieLister sama rozhodovat o tom jakou implementaci použije, ale bude tuto informaci vyžadovat po okolí. Pomůže nám to take vyřešit problém s předáváním názvu souboru. V našem případě se zabýváme Dependency Injection, takže zvolíme tento typ IoC. Pro implementaci DI můžeme používat následující tři způsoby:
+Nyní je na čase využít Inversion of Control – pak již nebude třída MovieLister sama rozhodovat o tom, jakou implementaci použije, ale bude tuto informaci vyžadovat po okolí. Pomůže nám to také vyřešit problém s předáváním názvu souboru. V našem případě se zabýváme Dependency Injection, takže zvolíme tento typ IoC. Pro implementaci DI můžeme používat následující tři způsoby:
 
 \begin{itemize}
 \item{Constructor Injection} 
 \item{Setter Injection} 
 \item{Interface Injection} 
 \end{itemize}
+
+Všechny tři typy Dependency Injection mají společné to, že díky nim už nejsou „klientské“ třídy závislé na žádné konkrétní implementaci, ale pouze na obecném interface a čekají, že všechny potřebné parametry dostanou zvenku, dostáváme se tedy k situaci, kterou ilustruje \fig{injector}.
 
 \begin{figure}[!t]
 \centering
@@ -481,11 +482,9 @@ Nyní je na čase využít Inversion of Control – pak již nebude třída Movi
 \label{fig:injector}
 \end{figure}
 
-Všechny tři typy Dependency Injection mají společné to, že díky nim už nejsou „klientské“ třídy závislé na žádné konkrétní implementaci, ale pouze na obecném interface a čekají, že všechny potřebné parametry dostanou zvenku, dostáváme se tedy k situaci, kterou ilustruje \fig{injector}
-
 \subsection{Constructor Injection}
 
-Při použití Constructor Injection definujeme závislosti třídy v konstruktoru a tak vyžadujeme, aby bylo předáno vše, co třída potřebuje ke svému životu. Naše třídy tedy budou vypadat nějak takto:
+Při použití Constructor Injection definujeme závislosti třídy v konstruktoru, a tak vyžadujeme, aby bylo předáno vše, co třída potřebuje ke svému životu. Naše třídy tedy budou vypadat nějak takto:
 
 \lstset{language=Java, caption=MovieLister s použitím Constructor Injection, label=listing:Java}
 \begin{lstlisting}
@@ -545,7 +544,7 @@ public MovieLister static createMovieLister() {
 
 \subsection{Interface Injection}
 
-U Interface Injection budeme podobně jako u Setter Inection definovat metody pro předání parametrů do našeho objektu, tentokrát ale jejich jméno určíme pomocí interface:
+U Interface Injection budeme podobně jako u Setter Injection definovat metody pro předání parametrů do našeho objektu, tentokrát ale jejich jméno určíme pomocí interface:
 
 \lstset{language=Java,caption=Třída MovieLister implementující definované rozhraní,label=listing:Java}
 \begin{lstlisting}
@@ -582,7 +581,7 @@ class ColonDelimitedMovieFinder implements MovieFinder, InjectFinderFilename....
 \section{Dependency Injection kontejner}
 \label{sec:Container}
 
-V ukázkách jednotlivých typů DI jsem objekty vždy nakonec sestavil vlastnoručně, tento kód je ale ve obdobný pro všechny případy a tak tuto práci u DI můžeme přenechat tzv. kontejneru, kterému pouze poskytneme konfiguraci. Kontejner poté funguje vlastně tak, že sestaví a instancuje celý strom závislostí aplikace ještě předtím než se samotná aplikace spustí, můžeme si to představit na následujícím příkladu aplikace, mějme nějaký Controller, který bude používat nám již známou třídu MovieLister. Konstruktory jednotlivých tříd tedy budou vypadat nějak takto:
+V ukázkách jednotlivých typů DI v první části byly objekty vždy sestavovány manuálně, tento kód je ale obdobný pro všechny případy, a tak tuto práci u DI můžeme přenechat tzv. kontejneru, kterému pouze poskytneme konfiguraci. Kontejner poté funguje vlastně tak, že sestaví a instancuje celý strom závislostí aplikace ještě předtím, než se samotná aplikace spustí. Můžeme si to představit na následujícím příkladu aplikace, mějme Controller, který bude používat nám již známou třídu MovieLister. Konstruktory jednotlivých tříd tedy budou vypadat nějak takto:
 
 \lstset{language=Java,caption=Konstruktory tříd k příkladu,label=listing:Java}
 \begin{lstlisting}
@@ -595,19 +594,19 @@ Pro to, abychom mohli spustit (tzn. nejdříve instancovat) náš Controller, ta
 
 \subsection{Dopady Dependency Injection na kód}
 
-Dependency Injection by dle mého názoru měl být pouze způsob, jak poskládat dohromady předem připravené třídy a tyto třídy by pokud možno uvnitř nemělo být potřeba měnit (někdy to zařídit ani nemůžeme – především u cizího kódu) a třídy by tak neměly o případném použití nějakého Dependency Injection kontejneru vůbec vědět. Když se podíváme na jednotlivé typy DI, tak největší nároky na podobu dané třídy klade Interface Injection, kde musíme vytvářet rozhraní a ta implementovat. U Setter Injection zase porušujeme čistý návrh objektu tím, že zveřejňujeme settery i pro parametry, které by měly zůstat po počáteční inicializaci neměnné – k tomu se nejlépe hodí Constructor Injection. Je zde velmi názorně patrné, které závislosti potřebuje třída pro svůj běh a tak nemáme vlastně možnost třídu instancovat v nekonzistentní podobě. To zároveň nejlépe odpovídá požadavku na co nejmenší přizpůsobování se DI – třídu, která používá Constructor Injection bychom měli být schopní volně používat i bez jakéhokoli kontejneru a vždy mít zajištěnu její konzistentnost.
+Dependency Injection by měl být pouze způsob, jak poskládat dohromady předem připravené třídy a tyto třídy by pokud možno uvnitř nemělo být potřeba měnit (někdy to zařídit ani nemůžeme – především u cizího kódu) a třídy by tak neměly o případném použití nějakého Dependency Injection kontejneru vůbec vědět. Když se podíváme na jednotlivé typy DI, tak největší nároky na podobu dané třídy klade Interface Injection, kde musíme vytvářet rozhraní a ta implementovat. U Setter Injection zase porušujeme čistý návrh objektu tím, že zveřejňujeme settery i pro parametry, které by měly zůstat po počáteční inicializaci neměnné – k tomu se nejlépe hodí Constructor Injection. Je zde velmi názorně patrné, které závislosti potřebuje třída pro svůj běh, a tak nemáme vlastně možnost třídu instancovat v nekonzistentní podobě. To zároveň nejlépe odpovídá požadavku na co nejmenší přizpůsobování se DI – třídu, která používá Constructor Injection bychom měli být schopní volně používat i bez jakéhokoli kontejneru a vždy mít zajištěnu její konzistentnost.
 Naopak je zde několik problémů s využitím Constructor Injection:
 \begin{itemize}
-\item Pokud máme v konstruktoru hodně parametrů, tak může být méně přehledný, zvlášť výrazně je toto vidět u parametrů, které jsou nějakého skalárního typu (String/int), zde se pak můžeme orientovat pouze podle pořadí (u setterů vždy vidíme jméno toho, co nastavujeme).
+\item Pokud máme v konstruktoru hodně parametrů, tak může být méně přehledný, zvlášť výrazně je toto vidět u parametrů, které jsou skalárního typu (String, Integer), zde se pak můžeme orientovat pouze podle pořadí (u setterů vždy vidíme jméno toho, co nastavujeme).
 \item Pokud máme více způsobů, jak sestavit daný objekt, tak můžeme poskytnout více konstruktorů, ty se ale můžou lišit pouze počtem a typy parametrů, takže nemusí vždy postačovat – pro ten případ pak můžeme použít factory metody nebo třídy.
 \item Pokud máme více konstruktorů a ještě použijeme dědičnost, pak musíme vždy ošetřit všechny možnosti konstrukce a přesměrovat je na konstruktory rodiče, což může vést k ještě většímu počtu konstruktorů.
 \end{itemize}
-Navzdory zmíněným rizikům použití Constructor Injection bych ji stále stejně jako Martin Fowler preferoval – jak jsem již zmínil, tak její používání má nejmenší vliv na přirozené psaní tříd a také nám vždy zajišťuje konzistenci. Výběr není většinou tak obtížný, protože tvůrci jednotlivých kontejnerů a frameworků v mnoha případech podporují více typů DI, takže je možné v průběhu vývoje bez problémů přestoupit z Constructor Injection např. na Setter Injection, ostatně dalším dobrým důvodem pro podporu více typů DI je možnost integrace cizího kódu do naší aplikace, kde čím více typů je podporováno, tím je větší šance, že nenarazíme na situaci, kterou by daný kontejner nezvládl. Pro začlenění cizího kódu můžeme také využít návrhových vzorů jako např. Adapter nebo Bridge, které vhodně přizpůsobí rozhraní potřebě kontejneru.
+Navzdory zmíněným rizikům použití Constructor Injection bychom ji stále stejně jako Martin Fowler preferovalil – její používání má nejmenší vliv na přirozené psaní tříd a také vždy zajišťuje konzistenci. Výběr není většinou tak zásadní, protože tvůrci jednotlivých kontejnerů a frameworků v mnoha případech podporují více typů DI, takže je možné v průběhu vývoje bez problémů přestoupit z Constructor Injection např. na Setter Injection, ostatně dalším dobrým důvodem pro podporu více typů DI je možnost integrace cizího kódu do naší aplikace, kde čím více typů je podporováno, tím je větší šance, že nenarazíme na situaci, kterou by daný kontejner nezvládl. Pro začlenění cizího kódu můžeme také využít návrhových vzorů jako např. Adapter nebo Bridge, které vhodně přizpůsobí rozhraní potřebě kontejneru.
 
 \subsection{Services vs. Value Objects}
 
 Pokud se podíváme na objekty, které tvoří naši aplikaci, můžeme zde nalézt dva základní druhy – objekty, které jsou zajímavé tím, že především vyjadřují svojí hodnotu (skalární typy jako string, integer, ale také doménové objekty) a dále pak objekty, které ty hodnotové pouze využívají a samotný vnitřní stav těchto objektů není tím důležitým. Máme tedy jednu sadu objektů, které reprezentují data a druhou skupinu, která slouží k manipulaci s těmito daty. K tomuto závěru došel Miško Hevery ve svém článku To „new“ or not to „new“ [link], hodnotové objekty označuje jako Newable (případně Value Object) a druhou skupinu jako Injectable (případně Service). Pojmy Injectable a Newable nejsou významově zcela přesné, jak si ukážeme na následujících řádcích, takže budou použity pojmy alternativní. Z tohoto rozdělení pak vyvozuje závěr, že Services by měly požadovat v konstruktoru (nebo jinou DI metodou) pouze další Services. Důvodem je to, že parametry Value Objects nejsou v momentě vytváření objektů DI kontejnerem ještě známy – kontejner nemůže vědět, jakou konkrétní hodnotu bude objekt mít v rámci naší aplikace. Podobně by Value Objects neměly ve svém konstruktoru vyžadovat objekty spadající do druhé skupiny. Services by obecně měly pracovat s Value Objects,takže opačná závislost by neměla být potřeba. Zároveň se nám tím velmi ulehčí mockování v Unit testech.
-Pokud se podíváme na náš předchozí příklad, tak MovieLister jasně spadá do skupiny Services a ve svém konstruktoru si žádá pouze MovieFinder. Movie Finder je spadá také do skupiny Services, ale v konstruktoru požaduje textový řetězec reprezentující název souboru. Jde sice o datový typ string, tzn. spadající do skupiny Value Object, ale tak, jak je příklad napsán, je tento parametr neměnný a to znamená, že může být uveden přímo v konfiguračním souboru a je tedy přístupný už ve fázi, kdy kontejner skládá objekty dohromady.
+Pokud se podíváme na náš předchozí příklad, tak MovieLister jasně spadá do skupiny Services a ve svém konstruktoru si žádá pouze MovieFinder. Movie Finder spadá také do skupiny Services, ale v konstruktoru požaduje textový řetězec reprezentující název souboru. Jde sice o datový typ string, tzn. spadající do skupiny Value Object, ale tak, jak je příklad napsán, je tento parametr neměnný, a to znamená, že může být uveden přímo v konfiguračním souboru a je tedy přístupný už ve fázi, kdy kontejner skládá objekty dohromady.
 Pro další ukázky budeme potřebovat více Value Objects, takže ve třídě MovieFinder budeme místo stringu požadovat objekt File:
 
 \lstset{language=Java, caption=Naplnění proměnné finder s využitím interface, label=listing:Java}
@@ -633,12 +632,12 @@ class FileFactory...
   }
 \end{lstlisting}
 
-Pak už stačí pouze kontejner nakonfigurovat tak, aby objekt File vytvářel pomocí FileFactory a její metody create. Doteď Stejným způsobem pak doporučuji postupovat, pokud potřebujeme používat nějaký Value Object v nějaké Service – v konstruktoru požádáme o Factory třídu místo instance objektu a v momentě, kdy máme všechna potřebná data (například je teprve v této fázi dostaneme ze vstupu) teprve předáme parametry do Factory a dostaneme instanci. Výhodou tohoto způsobu oproti používání new na Value Objects (jak navrhuje Miško Hevery v odkazovaném článku) je možnost snadno měnit a konfigurovat implementaci nejen Services, ale i Value Objects. Factory třídy samozřejmě nemá cenu používat všude, je velmi nepravděpodobné, že bychom například potřebovali vyměnit implementaci rapper objektů jako String nebo Integer.
+Pak už stačí pouze kontejner nakonfigurovat tak, aby objekt File vytvářel pomocí FileFactory a její metody create. Stejným způsobem pak doporučuji postupovat, pokud potřebujeme používat nějaký Value Object v nějaké Service – v konstruktoru požádáme o Factory třídu místo instance objektu a v momentě, kdy máme všechna potřebná data (například je teprve v této fázi dostaneme ze vstupu), teprve předáme parametry do Factory a dostaneme instanci. Výhodou tohoto způsobu oproti používání new na Value Objects (jak navrhuje Miško Hevery v odkazovaném článku) je možnost snadno měnit a konfigurovat implementaci nejen Services, ale i Value Objects. Factory třídy samozřejmě nemá cenu používat všude, je velmi nepravděpodobné, že bychom například potřebovali vyměnit implementaci rapper objektů jako String nebo Integer.
 
 \subsection{Konfigurace}
 
 Konfiguraci kontejneru – tzn. místo, kde určujeme, která konkrétní implementace se na daném místě použije, může mít v základu dvě podoby. První možností je tuto konfiguraci provést přímo pomocí programového kódu, nebo můžeme konfiguraci načítat z konfiguračního souboru a pak jej zpracovávat.
-Výhodou konfiguračních souborů by mělo být, že by je měl být schopný upravovat i někdo, kdo není programátor, což se ale asi moc často stávat nebude. Výhodou však může být to, že nemusíme znovu kompilovat nějaký kód, pokud je potřeba pouze upravit konfiguraci. [je to opravdu tak? – můj odhad]
+Výhodou konfiguračních souborů by mělo být to, že by je měl být schopný upravovat i někdo, kdo není programátor, což se ale asi moc často stávat nebude. Zásadnější však může být to, že nemusíme znovu kompilovat nějaký kód, pokud je potřeba pouze upravit konfiguraci.
 Výhodnější může být zapsat konfiguraci pomocí kódu, pokud je konfigurace kratší – pak je zbytečné vytvářet konfigurační soubor. Nebo naopak pokud je konfigurace velmi komplexní a obsahuje nějakou podmiňovací logiku, pak není příliš vhodné takto „programovat“ v konfiguračním souboru.
 Ve výsledku tato volba připadá na konkrétní situaci a preference programátorů. Ostatně pokud kontejner podporuje nastavení pomocí programového kódu, tak není výrazný problém si dopsat vlastní podporu pro nějaký typ konfiguračního souboru – například pokud bychom místo formátu XML chtěli použít YAML.
 
@@ -651,7 +650,7 @@ Autowiring se nazývá mechanismus, který by měl ulehčit konfiguraci DI konte
 \item U properties se také někdy využívá odhadování podle jména proměnné, kdy pak systém hledá třídu, která má stejné jméno jako daná property.
 \end{itemize}
 
-Autowiring se tedy snaží znovupoužít informace, které jsme již uvedli při psaní kódu a pokud na jejich základě je schopný říci, jakou implementaci vložit, tak tuto informaci nemusíme duplikovat v konfiguraci. Samozřejmě nám ale nepomůže v případech, kdy potřebujeme do třídy injectiovat např. parametry typu string – tam není, kde by danou hodnotu systém mohl zjistit a musíme ji zapsat sami.
+Autowiring se tedy snaží použít informace, které jsme již uvedli při psaní kódu a pokud na jejich základě je schopný říci, jakou implementaci vložit, tak tuto informaci nemusíme duplikovat v konfiguraci. Samozřejmě nám ale nepomůže v případech, kdy potřebujeme do třídy injectovat např. parametry typu string – tam není, kde by danou hodnotu systém mohl zjistit a musíme ji zapsat sami.
 
 \subsection{Konkrétní příklady}
 
@@ -688,7 +687,7 @@ Při inicializaci kontejneru je potřeba poskytnout název konfiguračního soub
 ClassPathResource res = new ClassPathResource("spring-beans.xml"); BeanFactory factory = new XmlBeanFactory(res);
 \end{lstlisting}
 
-Jednotlivé služby pak v kódu získáváme prostřednictvím id atributí nadefinovaných v XML konfiguračním souboru. Stejně jako u jiných kontejnerů, i zde jsou třídy nainstancovány ve správném pořadí a závislosti jsou do nich vloženy prostřednictvím nadefinovaných setterů.
+Jednotlivé služby pak v kódu získáváme prostřednictvím id atributů definovaných v XML konfiguračním souboru. Stejně jako u jiných kontejnerů, i zde jsou třídy nainstancovány ve správném pořadí a závislosti jsou do nich vloženy prostřednictvím nadefinovaných setterů.
 
 \lstset{language=Java,caption=Inicializace kontejneru,label=listing:Java}
 \begin{lstlisting}
@@ -719,9 +718,8 @@ public ConstructorBasedCabAgency(AirlineAgency airlineAgency) {  this.airlineAge
 \end{lstlisting}
 
 Třída ConstructorBasedCabAgency je tedy závislá na rozhraní AirlineAgency a zároveň ConstructorBasedTripPlanner je závislý na CabAgency a také AirlineAgency.
-PicoContainer rozhoduje závislosti prohlížením jednotlivých konstruktorů, přičemž jednotlivé služby se u něj registrují prostřednictvím implementovaných tříd, klient si ovšem o službu říkají prostřednictvím názvu rozhraní. PicoContainer následně traverzuje celou implementační hierarchií rozhraní a vybere nejvhodnější třídu.
-U předešlého příkladu je tedy TripPlanner závislý na AirlineAgency a CabAgency a AirlineAgency a CabAgency jsou závislé na TripPlanner. PicoContainer tedy nejprve nainstancuje AirlineAgency, předá referenci konstruktoru CabAgency a poté předá CabAgency i AirlineAgency při vytváření TripPlanneru. Celou tuto sekvenci přitom vyvolá následující řádka kódu:
-pico.getComponentInstanceOfType(TripPlanner.class);
+PicoContainer rozhoduje závislosti prohlížením jednotlivých konstruktorů, přičemž jednotlivé služby se u něj registrují prostřednictvím implementovaných tříd, klient si ovšem o službu říká prostřednictvím názvu rozhraní. PicoContainer následně traverzuje celou implementační hierarchií rozhraní a vybere nejvhodnější třídu.
+U předešlého příkladu je tedy TripPlanner závislý na AirlineAgency a CabAgency a AirlineAgency a CabAgency jsou závislé na TripPlanner. PicoContainer tedy nejprve nainstancuje AirlineAgency, předá referenci konstruktoru CabAgency a poté předá CabAgency i AirlineAgency při vytváření TripPlanneru. Celou tuto sekvenci vyvoláme následujícím příkazem: pico.getComponentInstanceOfType(TripPlanner.class).
 
 \section{Závěr}
 
