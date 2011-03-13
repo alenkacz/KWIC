@@ -6,93 +6,103 @@ import javax.persistence.*;
 
 
 public class Generator {
-	
+
 	private static final String CLASS_ERROR = "Given class does not have entity annotation or specified table name";
-	
-	private static Form form = null;
-	
+
 	/**
 	 * Generates and prints out XML output of form for received entity
 	 */
 	public static void generate(Class c) {
-		getFormId(c);
-		
-		Method[] methods = c.getDeclaredMethods();
-		
-		for( Method m : methods ) {
-			if( m.getName().contains("get") ) // not interested in setter methods
-				parseMethod(m);
+		try {
+			String formId = getFormId(c);
+			Form form = new Form(formId);
+			addInputs(c, form);
+			System.out.println(form.toXml());
+		} catch (IllegalArgumentException e) {
+			printClassErrorAndExit(e.getMessage());
 		}
-		
-		System.out.println(form.toXml());
 	}
 
 	/**
 	 * Checks validity of received entity and retrieves form id from Annotation
 	 */
-	private static void getFormId(Class c) {
+	private static String getFormId(Class c) throws IllegalArgumentException {
 		Annotation[] annotations = c.getDeclaredAnnotations();
-		boolean valid = false;
-		
-		if( annotations.length < 2 ) printClassErrorAndExit(CLASS_ERROR); // validation
-		
+		boolean isEntity = false;
+		String formId = null;
+
+		if( annotations.length < 2 ) { // validation
+			throw new IllegalArgumentException(CLASS_ERROR);
+		}
+
 		for( Annotation a : annotations ) {
 			if( a instanceof Table ) {
 				Table t = (Table) a;
-				form = new Form(t.name());
+				formId = t.name();
 			}
-			
+
 			if( a instanceof Entity ) {
-				valid = true;
+				isEntity = true;
 			}
 		}
-		
-		if( !valid || form == null ) printClassErrorAndExit(CLASS_ERROR); // validation
+
+		if( !isEntity || formId == null ) { // validation
+			throw new IllegalArgumentException(CLASS_ERROR);
+		}
+
+		return formId;
+	}
+
+	private static void addInputs(Class c, Form form) {
+		Method[] methods = c.getDeclaredMethods();
+		for( Method m : methods ) {
+			if( m.getName().contains("get") ) { // not interested in setter methods
+				form.addInput(processMethod(m));
+			}
+		}
 	}
 
 	/**
 	 * Parses single method with annotations and fills information into newly created Input object
 	 */
-	private static void parseMethod(Method m) {
+	private static Input processMethod(Method m) {
 		Annotation[] annotations = m.getDeclaredAnnotations();
 		Class returnType = m.getReturnType();
 		String name = m.getName().substring(3); // ignoring first three letters - get
-		
-		Input i = new Input(decideType(returnType),name);
-		
+
+		Input i = new Input(decideType(returnType), name);
+
 		for( Annotation a : annotations ) {
 			if( a instanceof Column ) {
-				i = parseColumn(i, a);
+				i = processColumn(i, (Column) a);
 			} else if( a instanceof Id ) {
-				i = parseId(i,a);
+				i = processId(i, (Id) a);
 			} else if( a instanceof Temporal ) {
-				i = parseTemporal(i,a);
+				i = processTemporal(i,(Temporal) a);
 			} else if( a instanceof Enumerated ) {
-				i = parseEnumerated(i,a);
+				i = processEnumerated(i, (Enumerated) a);
 			}
 		}
-		
-		form.addInput(i);
+
+		return i;
 	}
-	
-	private static Input parseColumn(Input i, Annotation a) {
-		Column c = (Column) a;
-		
+
+	private static Input processColumn(Input i, Column c) {
 		i.setRequired(!c.nullable());
 		i.setLength(c.length());
-		
+
 		return i;
 	}
-	
-	private static Input parseId(Input i, Annotation a) {
+
+	private static Input processId(Input i, Id a) {
 		return i;
 	}
-	
-	private static Input parseTemporal(Input i, Annotation a) {
+
+	private static Input processTemporal(Input i, Temporal a) {
 		return i;
 	}
-	
-	private static Input parseEnumerated(Input i, Annotation a) {
+
+	private static Input processEnumerated(Input i, Enumerated a) {
 		return i;
 	}
 

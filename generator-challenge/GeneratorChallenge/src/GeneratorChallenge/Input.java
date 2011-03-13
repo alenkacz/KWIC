@@ -1,11 +1,13 @@
 package GeneratorChallenge;
 
 public class Input {
+
+	public static final int LENGTH_EMPTY = -1;
 	
 	private String type;
 	private String name;
 	private Boolean required = null;
-	private int length = -1;
+	private int length = LENGTH_EMPTY;
 	
 	public Input(String type, String name) {
 		this.type = type;
