@@ -719,10 +719,6 @@ Třída ConstructorBasedCabAgency je tedy závislá na rozhraní AirlineAgency a
 PicoContainer rozhoduje závislosti prohlížením jednotlivých konstruktorů, přičemž jednotlivé služby se u něj registrují prostřednictvím implementovaných tříd, klient si ovšem o službu říká prostřednictvím názvu rozhraní. PicoContainer následně traverzuje celou implementační hierarchií rozhraní a vybere nejvhodnější třídu.
 U předešlého příkladu je tedy TripPlanner závislý na AirlineAgency a CabAgency a AirlineAgency a CabAgency jsou závislé na TripPlanner. PicoContainer tedy nejprve nainstancuje AirlineAgency, předá referenci konstruktoru CabAgency a poté předá CabAgency i AirlineAgency při vytváření TripPlanneru. Celou tuto sekvenci vyvoláme následujícím příkazem: pico.getComponentInstanceOfType(TripPlanner.class).
 
-\section{Závěr}
-
-TODO
-
 % conference papers do not normally have an appendix
 
 
