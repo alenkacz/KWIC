@@ -392,7 +392,7 @@ IoC je obecný princip, kde upřednostňujeme kontrolu zvenčí daného objektu 
 DI je pojem, který poprvé představil Martin Fowler ve svém článku [zdroj], kde popisuje dvě různé implementace IoC pro snížení závislostí mezi komponentami systému – Dependency Injection a Service Locator. Tento článek částečně vychází z tohoto díla.
 
 \section{Princip Dependency injection}
-Základní myšlenkou DI je oddělení místa použití konkrétní implementace a místa, kde se tato implementace instaluje. Nejdříve si představíme vzorový příklad, který budeme následně upravovat. Vzorový příklad je napsát v Javě, ale tyto pravidla jsou obecně použitelná I pro ostatní objektově orientované jazyky.
+Základní myšlenkou DI je oddělení místa použití konkrétní implementace a místa, kde se tato implementace instancuje. Nejdříve si představíme vzorový příklad, který budeme následně upravovat. Vzorový příklad je napsát v Javě, ale tyto pravidla jsou obecně použitelná I pro ostatní objektově orientované jazyky.
 Máme třídu MovieLister, která slouží pro získání filmů a její konkrétní metodu moviesDirectedBy, která slouží pro získání pouze těch filmů, které mají daného režiséra.
 
 \lstset{language=Java, caption=MovieLister naivní implementace, label=listing:Java,
@@ -500,7 +500,7 @@ class ColonMovieFinder...
     }
 \end{lstlisting}
 
-Nyní pokaždé, když budeme chtít instalovat třídu MovieLister, tak jí budeme muset dopředu předat konkrétní implementaci, kterou chceme zrovna použít. Jak je vidět, tak nyní jsme dosáhli oddělení místa použití a samotného skládání objektů, tento kód se tedy může objevit například v nějaké factory metodě:
+Nyní pokaždé, když budeme chtít instancovat třídu MovieLister, tak jí budeme muset dopředu předat konkrétní implementaci, kterou chceme zrovna použít. Jak je vidět, tak nyní jsme dosáhli oddělení místa použití a samotného skládání objektů, tento kód se tedy může objevit například v nějaké factory metodě:
 
 \lstset{language=Java, caption=Příklad použití ve factory metodě, label=listing:Java}
 \begin{lstlisting}
@@ -589,7 +589,7 @@ class ColonDelimitedMovieFinder implements MovieFinder, InjectFinderFilename....
 \section{Dependency Injection kontejner}
 \label{sec:Container}
 
-V ukázkách jednotlivých typů DI jsem objekty vždy nakonec sestavil vlastnoručně, tento kód je ale ve obdobný pro všechny případy a tak tuto práci u DI můžeme přenechat tzv. kontejneru, kterému pouze poskytneme konfiguraci. Kontejner poté funguje vlastně tak, že sestaví a instaluje celý strom závislostí aplikace ještě předtím než se samotná aplikace spustí, můžeme si to představit na následujícím příkladu aplikace, mějme nějaký Controller, který bude používat nám již známou třídu MovieLister. Konstruktory jednotlivých tříd tedy budou vypadat nějak takto:
+V ukázkách jednotlivých typů DI jsem objekty vždy nakonec sestavil vlastnoručně, tento kód je ale ve obdobný pro všechny případy a tak tuto práci u DI můžeme přenechat tzv. kontejneru, kterému pouze poskytneme konfiguraci. Kontejner poté funguje vlastně tak, že sestaví a instancuje celý strom závislostí aplikace ještě předtím než se samotná aplikace spustí, můžeme si to představit na následujícím příkladu aplikace, mějme nějaký Controller, který bude používat nám již známou třídu MovieLister. Konstruktory jednotlivých tříd tedy budou vypadat nějak takto:
 
 \lstset{language=Java,caption=Konstruktory tříd k příkladu,label=listing:Java}
 \begin{lstlisting}
@@ -602,7 +602,7 @@ Pro to, abychom mohli spustit (tzn. nejdříve instancovat) náš Controller, ta
 
 \subsection{Dopady Dependency Injection na kód}
 
-Dependency Injection by dle mého názoru měl být pouze způsob, jak poskládat dohromady předem připravené třídy a tyto třídy by pokud možno uvnitř nemělo být potřeba měnit (někdy to zařídit ani nemůžeme – především u cizího kódu) a třídy by tak neměly o případném použití nějakého Dependency Injection kontejneru vůbec vědět. Když se podíváme na jednotlivé typy DI, tak největší nároky na podobu dané třídy klade Interface Injection, kde musíme vytvářet rozhraní a ta implementovat. U Setter Injection zase porušujeme čistý návrh objektu tím, že zveřejňujeme settery i pro parametry, které by měly zůstat po počáteční inicializaci neměnné – k tomu se nejlépe hodí Constructor Injection. Je zde velmi názorně patrné, které závislosti potřebuje třída pro svůj běh a tak nemáme vlastně možnost třídu instalovat v nekonzistentní podobě. To zároveň nejlépe odpovídá požadavku na co nejmenší přizpůsobování se DI – třídu, která používá Constructor Injection bychom měli být schopní volně používat i bez jakéhokoli kontejneru a vždy mít zajištěnu její konzistentnost.
+Dependency Injection by dle mého názoru měl být pouze způsob, jak poskládat dohromady předem připravené třídy a tyto třídy by pokud možno uvnitř nemělo být potřeba měnit (někdy to zařídit ani nemůžeme – především u cizího kódu) a třídy by tak neměly o případném použití nějakého Dependency Injection kontejneru vůbec vědět. Když se podíváme na jednotlivé typy DI, tak největší nároky na podobu dané třídy klade Interface Injection, kde musíme vytvářet rozhraní a ta implementovat. U Setter Injection zase porušujeme čistý návrh objektu tím, že zveřejňujeme settery i pro parametry, které by měly zůstat po počáteční inicializaci neměnné – k tomu se nejlépe hodí Constructor Injection. Je zde velmi názorně patrné, které závislosti potřebuje třída pro svůj běh a tak nemáme vlastně možnost třídu instancovat v nekonzistentní podobě. To zároveň nejlépe odpovídá požadavku na co nejmenší přizpůsobování se DI – třídu, která používá Constructor Injection bychom měli být schopní volně používat i bez jakéhokoli kontejneru a vždy mít zajištěnu její konzistentnost.
 Naopak je zde několik problémů s využitím Constructor Injection:
 \begin{itemize}
 \item Pokud máme v konstruktoru hodně parametrů, tak může být méně přehledný, zvlášť výrazně je toto vidět u parametrů, které jsou nějakého skalárního typu (String/int), zde se pak můžeme orientovat pouze podle pořadí (u setterů vždy vidíme jméno toho, co nastavujeme).
