@@ -74,7 +74,7 @@
 
 % *** CITATION PACKAGES ***  \usepackage{cite} cite.sty was written by Donald
 % Arseneau V1.6 and later of IEEEtran pre-defines the format of the cite.sty
-% package {} output to follow that of IEEE. Loading the cite package will
+% package \cite{} output to follow that of IEEE. Loading the cite package will
 % result in citation numbers being automatically sorted and properly
 % "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using cite.sty
 % will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's \cite will
@@ -394,7 +394,7 @@ Keywords: Dependency injection, Inversion of control, Dependency injection conta
 % no \IEEEPARstart
 Návrhový vzor Dependency Injection (DI) slouží pro snížení závislostí mezi jednotlivými částmi systému. Jeho provedení vychází z obecnějšího návrhového vzoru Inversion of Control (IoC) a tyto dva pojmy jsou často zaměňovány.
 IoC je obecný princip, kde upřednostňujeme kontrolu zvenčí daného objektu nad situací, kdy si objekt říká o věci sám z vnitřku – máme tak nad objektem větší kontrolu a tento návrh také umožňuje lepší znovupoužitelnost.
-DI je pojem, který poprvé představil Martin Fowler ve svém článku \cite{Inversion of Control Containers and the Dependency Injection pattern}, kde popisuje dvě různé implementace IoC pro snížení závislostí mezi komponentami systému – Dependency Injection a Service Locator. Tento článek částečně vychází z tohoto díla.
+DI je pojem, který poprvé představil Martin Fowler ve svém článku \emph{Inversion of Control Containers and the Dependency Injection pattern} \cite{Inversion of Control Containers and the Dependency Injection pattern}, kde popisuje dvě různé implementace IoC pro snížení závislostí mezi komponentami systému – Dependency Injection a Service Locator. Tento článek částečně vychází z tohoto díla.
 
 \section{Princip Dependency injection}
 Základní myšlenkou DI je oddělení místa použití konkrétní implementace a místa, kde se tato implementace instancuje. Nejdříve si představíme vzorový příklad, který budeme následně upravovat. Vzorový příklad je napsán v Javě, ale tyto pravidla jsou obecně použitelná i pro ostatní objektově orientované jazyky.
@@ -497,7 +497,7 @@ Nyní pokaždé, když budeme chtít instancovat třídu MovieLister, tak jí bu
 
 \lstset{language=Java, caption=Příklad použití ve factory metodě, label=listing:Java}
 \begin{lstlisting}
-public MovieLister static createMovieLister() {
+public static MovieLister createMovieLister() {
     MovieFinder finder = (MovieFinder) new ColonDelimitedMovieFinder("movies1.txt");
     MovieLister lister = new MovieLister(finder);
     return lister;
@@ -527,7 +527,7 @@ Kód, který nám připraví MovieLister tedy bude tentokrát vypadat takto:
 
 \lstset{language=Java, caption=MovieLister Setter Injection a factory metoda, label=listing:Java}
 \begin{lstlisting}
-public MovieLister static createMovieLister() {
+public static MovieLister createMovieLister() {
     ColonDelimitedMovieFinder finder = new ColonDelimitedMovieFinder();
     finder.setFilename("movies1.txt");
     MovieLister lister = new MovieLister();
@@ -599,7 +599,7 @@ Navzdory zmíněným rizikům použití Constructor Injection bychom ji stále s
 
 \subsection{Services vs. Value Objects}
 
-Pokud se podíváme na objekty, které tvoří naši aplikaci, můžeme zde nalézt dva základní druhy – objekty, které jsou zajímavé tím, že především vyjadřují svojí hodnotu (skalární typy jako string, integer, ale také doménové objekty) a dále pak objekty, které ty hodnotové pouze využívají a samotný vnitřní stav těchto objektů není tím důležitým. Máme tedy jednu sadu objektů, které reprezentují data a druhou skupinu, která slouží k manipulaci s těmito daty. K tomuto závěru došel Miško Hevery ve svém článku To „new“ or not to „new“ \cite{How to Think About the new Operator with Respect to Unit Testing}, hodnotové objekty označuje jako Newable (případně Value Object) a druhou skupinu jako Injectable (případně Service). Pojmy Injectable a Newable nejsou významově zcela přesné, jak si ukážeme na následujících řádcích, takže budou použity pojmy alternativní. Z tohoto rozdělení pak vyvozuje závěr, že Services by měly požadovat v konstruktoru (nebo jinou DI metodou) pouze další Services. Důvodem je to, že parametry Value Objects nejsou v momentě vytváření objektů DI kontejnerem ještě známy – kontejner nemůže vědět, jakou konkrétní hodnotu bude objekt mít v rámci naší aplikace. Podobně by Value Objects neměly ve svém konstruktoru vyžadovat objekty spadající do druhé skupiny. Services by obecně měly pracovat s Value Objects,takže opačná závislost by neměla být potřeba. Zároveň se nám tím velmi ulehčí mockování v Unit testech.
+Pokud se podíváme na objekty, které tvoří naši aplikaci, můžeme zde nalézt dva základní druhy – objekty, které jsou zajímavé tím, že především vyjadřují svojí hodnotu (skalární typy jako string, integer, ale také doménové objekty) a dále pak objekty, které ty hodnotové pouze využívají a samotný vnitřní stav těchto objektů není tím důležitým. Máme tedy jednu sadu objektů, které reprezentují data a druhou skupinu, která slouží k manipulaci s těmito daty. K tomuto závěru došel Miško Hevery ve svém článku \emph{To „new“ or not to „new“} \cite{How to Think About the new Operator with Respect to Unit Testing}, hodnotové objekty označuje jako Newable (případně Value Object) a druhou skupinu jako Injectable (případně Service). Pojmy Injectable a Newable nejsou významově zcela přesné, jak si ukážeme na následujících řádcích, takže budou použity pojmy alternativní. Z tohoto rozdělení pak vyvozuje závěr, že Services by měly požadovat v konstruktoru (nebo jinou DI metodou) pouze další Services. Důvodem je to, že parametry Value Objects nejsou v momentě vytváření objektů DI kontejnerem ještě známy – kontejner nemůže vědět, jakou konkrétní hodnotu bude objekt mít v rámci naší aplikace. Podobně by Value Objects neměly ve svém konstruktoru vyžadovat objekty spadající do druhé skupiny. Services by obecně měly pracovat s Value Objects,takže opačná závislost by neměla být potřeba. Zároveň se nám tím velmi ulehčí mockování v Unit testech.
 Pokud se podíváme na náš předchozí příklad, tak MovieLister jasně spadá do skupiny Services a ve svém konstruktoru si žádá pouze MovieFinder. Movie Finder spadá také do skupiny Services, ale v konstruktoru požaduje textový řetězec reprezentující název souboru. Jde sice o datový typ string, tzn. spadající do skupiny Value Object, ale tak, jak je příklad napsán, je tento parametr neměnný, a to znamená, že může být uveden přímo v konfiguračním souboru a je tedy přístupný už ve fázi, kdy kontejner skládá objekty dohromady.
 Pro další ukázky budeme potřebovat více Value Objects, takže ve třídě MovieFinder budeme místo stringu požadovat objekt File:
 
@@ -626,7 +626,7 @@ class FileFactory...
   }
 \end{lstlisting}
 
-Pak už stačí pouze kontejner nakonfigurovat tak, aby objekt File vytvářel pomocí FileFactory a její metody create. Stejným způsobem pak doporučuji postupovat, pokud potřebujeme používat nějaký Value Object v nějaké Service – v konstruktoru požádáme o Factory třídu místo instance objektu a v momentě, kdy máme všechna potřebná data (například je teprve v této fázi dostaneme ze vstupu), teprve předáme parametry do Factory a dostaneme instanci. Výhodou tohoto způsobu oproti používání new na Value Objects (jak navrhuje Miško Hevery v odkazovaném článku\cite{How to Think About the new Operator with Respect to Unit Testing}) je možnost snadno měnit a konfigurovat implementaci nejen Services, ale i Value Objects. Factory třídy samozřejmě nemá cenu používat všude, je velmi nepravděpodobné, že bychom například potřebovali vyměnit implementaci rapper objektů jako String nebo Integer.
+Pak už stačí pouze kontejner nakonfigurovat tak, aby objekt File vytvářel pomocí FileFactory a její metody create. Stejným způsobem pak doporučuji postupovat, pokud potřebujeme používat nějaký Value Object v nějaké Service – v konstruktoru požádáme o Factory třídu místo instance objektu a v momentě, kdy máme všechna potřebná data (například je teprve v této fázi dostaneme ze vstupu), teprve předáme parametry do Factory a dostaneme instanci. Výhodou tohoto způsobu oproti používání new na Value Objects (jak navrhuje Miško Hevery v odkazovaném článku \cite{How to Think About the new Operator with Respect to Unit Testing}) je možnost snadno měnit a konfigurovat implementaci nejen Services, ale i Value Objects. Factory třídy samozřejmě nemá cenu používat všude, je velmi nepravděpodobné, že bychom například potřebovali vyměnit implementaci rapper objektů jako String nebo Integer.
 
 \subsection{Konfigurace}
 
