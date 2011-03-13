@@ -611,9 +611,36 @@ Naopak je zde několik problémů s využitím Constructor Injection:
 \end{itemize}
 Navzdory zmíněným rizikům použití Constructor Injection bych ji stále stejně jako Martin Fowler preferoval – jak jsem již zmínil, tak její používání má nejmenší vliv na přirozené psaní tříd a také nám vždy zajišťuje konzistenci. Výběr není většinou tak obtížný, protože tvůrci jednotlivých kontejnerů a frameworků v mnoha případech podporují více typů DI, takže je možné v průběhu vývoje bez problémů přestoupit z Constructor Injection např. na Setter Injection, ostatně dalším dobrým důvodem pro podporu více typů DI je možnost integrace cizího kódu do naší aplikace, kde čím více typů je podporováno, tím je větší šance, že nenarazíme na situaci, kterou by daný kontejner nezvládl. Pro začlenění cizího kódu můžeme také využít návrhových vzorů jako např. Adapter nebo Bridge, které vhodně přizpůsobí rozhraní potřebě kontejneru.
 
-\subsection{Injectables vs. Newables}
+\subsection{Services vs. Value Objects}
 
-TODO
+Pokud se podíváme na objekty, které tvoří naši aplikaci, můžeme zde nalézt dva základní druhy – objekty, které jsou zajímavé tím, že především vyjadřují svojí hodnotu (skalární typy jako string, integer, ale také doménové objekty) a dále pak objekty, které ty hodnotové pouze využívají a samotný vnitřní stav těchto objektů není tím důležitým. Máme tedy jednu sadu objektů, které reprezentují data a druhou skupinu, která slouží k manipulaci s těmito daty. K tomuto závěru došel Miško Hevery ve svém článku To „new“ or not to „new“ [link], hodnotové objekty označuje jako Newable (případně Value Object) a druhou skupinu jako Injectable (případně Service). Pojmy Injectable a Newable nejsou významově zcela přesné, jak si ukážeme na následujících řádcích, takže budou použity pojmy alternativní. Z tohoto rozdělení pak vyvozuje závěr, že Services by měly požadovat v konstruktoru (nebo jinou DI metodou) pouze další Services. Důvodem je to, že parametry Value Objects nejsou v momentě vytváření objektů DI kontejnerem ještě známy – kontejner nemůže vědět, jakou konkrétní hodnotu bude objekt mít v rámci naší aplikace. Podobně by Value Objects neměly ve svém konstruktoru vyžadovat objekty spadající do druhé skupiny. Services by obecně měly pracovat s Value Objects,takže opačná závislost by neměla být potřeba. Zároveň se nám tím velmi ulehčí mockování v Unit testech.
+Pokud se podíváme na náš předchozí příklad, tak MovieLister jasně spadá do skupiny Services a ve svém konstruktoru si žádá pouze MovieFinder. Movie Finder je spadá také do skupiny Services, ale v konstruktoru požaduje textový řetězec reprezentující název souboru. Jde sice o datový typ string, tzn. spadající do skupiny Value Object, ale tak, jak je příklad napsán, je tento parametr neměnný a to znamená, že může být uveden přímo v konfiguračním souboru a je tedy přístupný už ve fázi, kdy kontejner skládá objekty dohromady.
+Pro další ukázky budeme potřebovat více Value Objects, takže ve třídě MovieFinder budeme místo stringu požadovat objekt File:
+
+\lstset{language=Java, caption=Naplnění proměnné finder s využitím interface, label=listing:Java}
+\begin{lstlisting}
+class MovieFinder...
+  public MovieFinder(File file) {
+      ...
+  }
+
+class File...
+  public File(String filename) {
+      ...
+  }
+\end{lstlisting}
+
+Pokud bychom nyní chtěli opět pro vybudování aplikace použít kontejner, tak bychom ho museli naučit, jak objekt File vybudovat. K tomu jsou určeny Factory třídy:
+
+\lstset{language=Java, caption=Naplnění proměnné finder s využitím interface, label=listing:Java}
+\begin{lstlisting}
+class FileFactory...
+  public File create(String filename) {
+      return new File(filename);
+  }
+\end{lstlisting}
+
+Pak už stačí pouze kontejner nakonfigurovat tak, aby objekt File vytvářel pomocí FileFactory a její metody create. Doteď Stejným způsobem pak doporučuji postupovat, pokud potřebujeme používat nějaký Value Object v nějaké Service – v konstruktoru požádáme o Factory třídu místo instance objektu a v momentě, kdy máme všechna potřebná data (například je teprve v této fázi dostaneme ze vstupu) teprve předáme parametry do Factory a dostaneme instanci. Výhodou tohoto způsobu oproti používání new na Value Objects (jak navrhuje Miško Hevery v odkazovaném článku) je možnost snadno měnit a konfigurovat implementaci nejen Services, ale i Value Objects. Factory třídy samozřejmě nemá cenu používat všude, je velmi nepravděpodobné, že bychom například potřebovali vyměnit implementaci rapper objektů jako String nebo Integer.
 
 \subsection{Konfigurace}
 
