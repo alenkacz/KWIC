@@ -450,14 +450,14 @@ class MovieLister...
   }
 \end{lstlisting}
 
-Nyní již můžeme do proměnné finder vložit jakoukoli implementaci rozhraní MovieFinder, ale vzhledem k zápisu našeho kódu je do něj opět vždy vkládána jedna konkrétní implentace, takže třída MovieLister má stále dvě závislosti, viz \fig{naive}. Současně vyžadujeme, aby se soubor, ze kterého budeme filmy načítat, vždy jmenoval movies1.txt, což je velmi silné omezení. Mohli bychom jeho nastavení umožňovat skrze třídu MovieLister, ale to by pak opět podporovalo svázání s danou konkrétní implementací MovieFinder (ostatní implementace vůbec nemusí pracovat se soubory, ale místo toho například s databází).
-
-\begin{figure}[!ht]
+\begin{figure}[!b]
 \centering
 \includegraphics[width=2.1in]{1-Naive}
 \caption{Vzniklé závislosti při naivní implementaci}
 \label{fig:naive}
 \end{figure}
+
+Nyní již můžeme do proměnné finder vložit jakoukoli implementaci rozhraní MovieFinder, ale vzhledem k zápisu našeho kódu je do něj opět vždy vkládána jedna konkrétní implentace, takže třída MovieLister má stále dvě závislosti, viz \fig{naive}. Současně vyžadujeme, aby se soubor, ze kterého budeme filmy načítat, vždy jmenoval movies1.txt, což je velmi silné omezení. Mohli bychom jeho nastavení umožňovat skrze třídu MovieLister, ale to by pak opět podporovalo svázání s danou konkrétní implementací MovieFinder (ostatní implementace vůbec nemusí pracovat se soubory, ale místo toho například s databází).
 
 Nyní je na čase využít Inversion of Control – pak již nebude třída MovieLister sama rozhodovat o tom, jakou implementaci použije, ale bude tuto informaci vyžadovat po okolí. Pomůže nám to také vyřešit problém s předáváním názvu souboru. V našem případě se zabýváme Dependency Injection, takže zvolíme tento typ IoC. Pro implementaci DI můžeme používat následující tři způsoby:
 
