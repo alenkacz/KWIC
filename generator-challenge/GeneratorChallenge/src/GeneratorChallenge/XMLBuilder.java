@@ -33,13 +33,26 @@ public class XMLBuilder {
 	}
 	
 	private Element parseInput(Input i) {
-		Element res = doc.createElement("input" + i.getType());
+		Element res = doc.createElement("util:input" + i.getType());
 		
 		res.setAttribute("label", i.getName());
 		res.setAttribute("value","#{bean." + i.getName().toLowerCase() + "}");
 		res.setAttribute("title","#{text[t." + form.getId().toLowerCase() + "." + i.getName());
 		res.setAttribute("renderer","#{empty " + i.getName() + "Render ? 'true' : " + i.getName() + "Render }");
 		res.setAttribute("id","#{prefix}" + i.getName().toLowerCase());
+
+                if( i.getValues().size() > 0 ) {
+                    int counter = 1;
+                    for( String s : i.getValues() ) {
+                        Element e = doc.createElement("f:selectItem");
+                        e.setAttribute("itemLabel", s);
+                        e.setAttribute("itemValue", String.valueOf(counter));
+                        e.setAttribute("id", "item"+ String.valueOf(counter));
+                        res.appendChild(e);
+                        ++counter;
+                    }
+                }
+      
 		if( i.isRequired() != null ) res.setAttribute("required", String.valueOf(i.isRequired()));
 		if( i.getType().toLowerCase().equals("text") ) { 
 			res.setAttribute("size", "30");

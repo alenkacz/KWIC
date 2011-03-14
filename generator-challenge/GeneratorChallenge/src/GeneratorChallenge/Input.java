@@ -1,5 +1,8 @@
 package GeneratorChallenge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Input {
 
 	public static final int LENGTH_EMPTY = -1;
@@ -8,6 +11,7 @@ public class Input {
 	private String name;
 	private Boolean required = null;
 	private int length = LENGTH_EMPTY;
+        private List<String> values = new ArrayList<String>();
 	
 	public Input(String type, String name) {
 		this.type = type;
@@ -40,4 +44,16 @@ public class Input {
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
+
+        public void setValues(List<String> values) {
+            this.values = values;
+        }
+
+        public List<String> getValues() {
+            return this.values;
+        }
+
+        public void addValue( String s ) {
+            this.values.add(s);
+        }
 }

@@ -57,15 +57,16 @@ public class Generator {
 		Method[] methods = c.getDeclaredMethods();
 		for( Method m : methods ) {
 			if( m.getName().contains("get") ) { // not interested in setter methods
-				form.addInput(processMethod(m));
-			}
-		}
-	}
+                            Input i = processMethod(m, m.getReturnType());
+                            if (i != null) form.addInput(i);
+                        }
+                    }
+		}	
 
 	/**
 	 * Parses single method with annotations and fills information into newly created Input object
 	 */
-	private static Input processMethod(Method m) {
+	private static Input processMethod(Method m, Class c) {
 		Annotation[] annotations = m.getDeclaredAnnotations();
 		Class returnType = m.getReturnType();
 		String name = m.getName().substring(3); // ignoring first three letters - get
@@ -76,11 +77,12 @@ public class Generator {
 			if( a instanceof Column ) {
 				i = processColumn(i, (Column) a);
 			} else if( a instanceof Id ) {
-				i = processId(i, (Id) a);
+				//i = parseId(i,a);
+                                i = null;
 			} else if( a instanceof Temporal ) {
 				i = processTemporal(i,(Temporal) a);
 			} else if( a instanceof Enumerated ) {
-				i = processEnumerated(i, (Enumerated) a);
+				i = processEnumerated(i, (Enumerated) a, c);
 			}
 		}
 
@@ -102,7 +104,14 @@ public class Generator {
 		return i;
 	}
 
-	private static Input processEnumerated(Input i, Enumerated a) {
+	private static Input processEnumerated(Input i, Enumerated a,Class c) {
+                if( c.isEnum() ) {
+                    Object[] values = c.getEnumConstants();
+
+                    for( Object o : values ) {
+                        i.addValue(o.toString());
+                    }
+                }
 		return i;
 	}
 
@@ -110,11 +119,18 @@ public class Generator {
 	 * Checks Class of return type and decides which type of input to use
 	 */
 	private static String decideType(Class returnType) {
-		if( returnType.getName().equals("java.util.Date")) {
-			return "Date";
-		} else {
-			return "Text";
-		}
+		String returnName = returnType.getName().replace(".", "#");
+                returnName = returnName.replace("$", "#");
+                String[] returnParts = returnName.split("#");
+                String res = returnParts[returnParts.length - 1];
+
+                if( res.equals("String") ) {
+                    res = "Text";
+                } else if( returnType.getName().indexOf("$") != -1 ) {
+                    res = "SelectOneMenu";
+                }
+
+                return res; // returning last one
 	}
 
 	/**
