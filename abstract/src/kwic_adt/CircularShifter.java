@@ -58,4 +58,69 @@ public class CircularShifter {
 		
 		return res;
 	}
+
+	public String getWord(Integer index) {
+		return _input.getWord(_shiftedIndex[index][0], _shiftedIndex[index][1]);
+	}
+
+	public int getLineNumber(Integer index) {
+		return _shiftedIndex[index][0];
+	}
+
+	public int getWordIndex(Integer index) {
+		return _shiftedIndex[index][1];
+	}
+	
+	public String getRightContext(int line, int index, int context) {
+		String res = "";
+		if( index <  _input.getLine(line).length()) {
+			String[] right = _input.getWordsToRightOf(line, index);
+			int counter = 0;
+			
+			for( String s : right ) {
+				if( counter < context ) {
+					res += s + " ";
+					counter++;
+				}
+			}
+			
+			if( right.length < context && (line+1) < _input.getLineCount() ) {
+				//not enough words on this line
+				res += getRightContext(line+1,0,context-right.length);
+			}
+		} else { // started at the end of line
+			if ((line+1) < _input.getLineCount()) {
+				res += getRightContext(line+1,0,context);
+			}
+		}
+		
+		return res;
+	}
+
+	public String getLeftContext(int line, int index, int context) {
+		String res = "";
+		if( index != 0 ) {
+			String[] left = _input.getWordsToLeftOf(line, index);
+			int counter = 0;
+			
+			for( int j = (left.length-1); j >= 0; j-- ) {
+				if( counter < context ) {
+					res = left[j] + " " + res;
+					counter++;
+				}
+			}
+			
+			if( left.length < context && (line-1) >= 0 ) {
+				//not enough words on this line
+				res = getLeftContext(line-1,_input.getLine(line-1).length(),context-left.length) 
+					+ res;
+			}
+		} else {
+			if( (line-1) >= 0 ) {
+				res = getLeftContext(line-1,_input.getLine(line-1).length(),context);
+			}
+		}
+
+		return res;
+	}
 }

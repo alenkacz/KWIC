@@ -92,4 +92,34 @@ public class LineStorage {
 	public String[] getWords(int line) {
 		return _lines.get(line).split("\\s");
 	}
+
+	public String[] getWordsToRightOf(int line, int index) {
+		String[] parts = _lines.get(line).split("\\s");
+		String[] result = new String[parts.length - index - 1];
+		int counter = 0;
+		
+		for( int i = index +1; i < parts.length; i++ ) {
+			result[counter] = parts[i];
+			counter++;
+		}
+		
+		return result;
+	}
+	
+	public String[] getWordsToLeftOf(int line, int index) {
+		if( index != 0 ) {
+			String[] parts = _lines.get(line).split("\\s");
+			String[] result = new String[index];
+			int counter = 0;
+			
+			for( int i = 0; i < index; i++ ) {
+				result[counter] = parts[i];
+				counter++;
+			}
+			
+			return result;
+		} else {
+			return null;
+		}
+	}
 }

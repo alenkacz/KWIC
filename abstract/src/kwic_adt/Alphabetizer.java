@@ -27,6 +27,8 @@ public class Alphabetizer {
 			}
 			
 		});
+		
+		String a = "";
 	}
 	
 	public int getLineCount() {
@@ -35,5 +37,25 @@ public class Alphabetizer {
 	
 	public String getLine(int i) {
 		return _shifter.getShiftedLine(_alphaIndex[i]);
+	}
+	
+	public String getWord( int i ) {
+		return _shifter.getWord(_alphaIndex[i]);
+	}
+
+	public int getLineNumber(int i) {
+		return _shifter.getLineNumber(_alphaIndex[i]);
+	}
+
+	public int getWordIndex(int i) {
+		return _shifter.getWordIndex(_alphaIndex[i]);
+	}
+
+	public String getLeftContext(int line, int index, int _context) {
+		return _shifter.getLeftContext(line,index,_context);
+	}
+
+	public String getRightContext(int line, int i, int _context) {
+		return _shifter.getRightContext(line,i,_context);
 	}
 }
