@@ -1,5 +1,6 @@
 package kwic_adt;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -7,33 +8,32 @@ import java.util.List;
 public class Alphabetizer {
 	
 	CircularShifter _shifter = null;
-	LineStorage _storage = new LineStorage();
+	Integer[] _alphaIndex;
 	
 	public Alphabetizer( CircularShifter c ) {
 		_shifter = c;
 	}
 	
 	public void alpha() {
-		List<String> lines = _shifter.getLines();
-		Collections.sort(lines, new IgnoreCaseComparator());
+		_alphaIndex = new Integer[_shifter.getWordsCount()];
 		
-		_storage.addLines(lines);
-	}
-	
-	public String getLine(int index) {
-		return _storage.getLine(index);
+		for( int i = 0; i < _shifter.getWordsCount(); i++ ) { _alphaIndex[i] = i; }
+		
+		Arrays.sort(_alphaIndex,new Comparator<Integer>() {
+
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return _shifter.getKeyword(o1).compareToIgnoreCase(_shifter.getKeyword(o2));
+			}
+			
+		});
 	}
 	
 	public int getLineCount() {
-		return _storage.getLineCount();
+		return _shifter.getWordsCount();
 	}
 	
-	
-}
-
-class IgnoreCaseComparator implements Comparator<String> {
-
-	public int compare(String s1, String s2) {
-		return s1.compareToIgnoreCase(s2);
+	public String getLine(int i) {
+		return _shifter.getShiftedLine(_alphaIndex[i]);
 	}
 }

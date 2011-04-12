@@ -4,42 +4,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CircularShifter {
-	LineStorage _shifted = new LineStorage();
+	private LineStorage _input;
+	String[] _keywords;
+	int[][] _shiftedIndex;
 
 	public void shift(LineStorage storage) {
+		_input = storage;
+		_shiftedIndex = new int[storage.getWordsCount()][2];
+		_keywords = new String[storage.getWordsCount()];
+		
+		int counter = 0;
+		
 		for( int i = 0; i < storage.getLineCount(); i++ ) {
-			addLines(generateAllShifts(storage.getLine(i)));
-		}
-	}
-	
-	public void addLines(List<String> lines) {
-		for( String l : lines ) {
-			_shifted.addLine(l);
-		}
-	}
-	
-	public int getLineCount() {
-		return _shifted.getLineCount();
-	}
-	
-	public List<String> getLines() {
-		return _shifted.getList();
-	}
-	
-	private List<String> generateAllShifts(String line) {
-		List<String> result = new ArrayList<String>();
-		String[] words = line.split("\\s"); // spliting line with whitespaces
-		for (int i = 0; i < words.length; i++) {
-			String string = words[i] + " "; // "first word"
-			for (int j = i+1; j < words.length; j++) { // words after "first word"
-				string += words[j] + " ";
+			for( int j = 0; j < storage.getTotalWordsCount(i); j++ ) {
+				// pair of a line number and word index
+				String word = storage.getWord(i,j);
+				if( !LineStorage.isNoiseWord(word) ) { // filter noise words
+					_shiftedIndex[counter][0] = i;
+					_shiftedIndex[counter][1] = j;
+					_keywords[counter] = word;
+					++counter;
+				}
 			}
-			for (int j = 0; j < i; j++) { // words before "first" word
-				string += words[j] + " ";
-			}
-			result.add(string);
 		}
+	}
+	
+	public int getWordsCount() {
+		return _input.getWordsCount();
+	}
+	
+	public String getKeyword(int index) {
+		return _keywords[index];
+	}
 
-		return result;
+	public String getShiftedLine(Integer index) {
+		return createShiftedLine(_shiftedIndex[index][0],_shiftedIndex[index][1]);
+	}
+	
+	private String createShiftedLine(int line, int startIndex) {
+		String res = "";
+		
+		String[] words = _input.getWords(line);
+
+		res += words[startIndex] + " ";
+		// from that word till the end
+		for( int i = startIndex+1; i < words.length; i++ ) {
+			res += words[i] + " ";
+		}
+		// from start till that word
+		for( int i = 0; i < startIndex; i++ ) {
+			res += words[i] + " ";
+		}
+		
+		return res;
 	}
 }

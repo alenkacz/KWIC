@@ -19,7 +19,9 @@ public class Input {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
-	            storage.addLine(line); // and adding it to the list 
+	            if( !line.equals("") ) { // skip empty lines 
+	            	storage.addLine(line.trim()); // and adding it to the list 
+	            }
 			}
 		} catch( IOException e ) {
 			printErrorAndExit();
