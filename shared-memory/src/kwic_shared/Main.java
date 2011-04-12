@@ -30,7 +30,7 @@ public class Main {
 	
 	///////////////// Settings
 	private static final Action _action = Action.search;
-	private static final String _keyword = "another";
+	private static final String _keyword = "into";
 	private static final int _context = 3;
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,6 @@ public class Main {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
-	            // TODO do normalization - clean text from separators and devide it only with one space
 	            if( !line.equals("") ) { // skip empty lines 
 	            	_linesOfWords.add(cleanWord(line.trim())); // and adding it to the list 
 	            }
@@ -145,8 +144,13 @@ public class Main {
 		List<Integer> indexes = findWordIndexes(_keyword,0,_alphaIndex.length);
 		List<String> res = new ArrayList<String>();
 		
-		for( Integer i : indexes ) {
-			res.add(getContextForIndex(i));
+		if( indexes != null ) {
+			for( Integer i : indexes ) {
+				res.add(getContextForIndex(i));
+			}
+		} else {
+			// nothing found
+			res.add("Nothing found");
 		}
 		
 		return res;
@@ -195,9 +199,9 @@ public class Main {
 		int middle = (left + right)/2;
 		
 		if( text.toLowerCase().compareTo(getWord(_alphaIndex[middle]).toLowerCase()) > 0 ) { // greater
-			return findIndexOfString(text,middle,right);
+			return findIndexOfString(text,middle+1,right);
 		} else if( text.toLowerCase().compareTo(getWord(_alphaIndex[middle]).toLowerCase()) < 0 ) { // lower
-			return findIndexOfString(text,left,middle);
+			return findIndexOfString(text,left,middle-1);
 		} else { // the same
 			return middle;
 		}
@@ -278,14 +282,18 @@ public class Main {
 		return false;
 	}
 	
+	/*
+	 * Cleans line from separators (removes commas etc.) and separates it only with one space
+	 */
 	private static String cleanWord(String s) {
 		String res = "";
-		String[] parts = s.split("\\s");
+		String[] parts = s.split("\\s"); // split with whitespaces
 		boolean first = true;
 		
 		for( String part : parts ) {
 			String temp = part;
 			for( char sep : _separators ) {
+				// looking for separators in the beginning and in the end
 				if( part.charAt(0) == sep ) { //first one
 					temp = part.substring(1);
 				}
@@ -324,6 +332,10 @@ public class Main {
 		return res;
 	}
 	
+	/**
+	 * Builds index of original input text - each line has a set of word indexes, which indicates
+	 * indexes on each line where that word starts
+	 */
 	private static void buildIndex() {
 		_index = new int[_linesOfWords.size()][];
 		for( int i = 0; i < _linesOfWords.size(); ++i ) {
@@ -335,7 +347,9 @@ public class Main {
 			for( int j = 1; j < words.length; ++j ) {
 				// previous index + length of previous word + space
 				_index[i][j] = _index[i][j-1]+words[j-1].length()+1;
-				if( !isNoiseWord(words[j]) )++_wordsCount;
+				if( !isNoiseWord(words[j]) ) {
+					++_wordsCount;
+				}
 			}
 		}
 	}
