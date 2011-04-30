@@ -43,6 +43,7 @@ public class LineStorage extends Observable {
 		_lines.add(cleanLine(l));
 		_wordsCount += getNotNoiseWordsCount(l);
 		
+		setChanged();
 		notifyObservers(EventType.ADD);
 	}
 	
@@ -124,5 +125,9 @@ public class LineStorage extends Observable {
 		} else {
 			return null;
 		}
+	}
+
+	public int getLastIndex() {
+		return (_lines.size() -1);
 	}
 }

@@ -5,7 +5,7 @@ public class Main {
 private enum Action {search, print};
 	
 	///////////////// Settings
-	private static final Action _action = Action.search;
+	private static final Action _action = Action.print;
 	private static final String _keyword = "into";
 	private static final int _context = 5;
 	
@@ -33,7 +33,7 @@ private enum Action {search, print};
 	    if( _action == Action.print ) {
 	    	output.print(input,indexes);
 	    } else if( _action == Action.search ) {
-	    	search.search(_keyword,_context,input,indexes);
+	    	//search.search(_keyword,_context,input,indexes);
 	    }
 	}
 	
