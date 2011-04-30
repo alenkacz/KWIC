@@ -6,7 +6,7 @@ public class Main {
 	
 	///////////////// Settings
 	private static final Action _action = Action.search;
-	private static final String _keyword = "into";
+	private static final String _keyword = "topic";
 	private static final int _context = 5;
 	
 	public static void main(String[] args) {

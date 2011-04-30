@@ -5,8 +5,8 @@ public class Main {
 private enum Action {search, print};
 	
 	///////////////// Settings
-	private static final Action _action = Action.print;
-	private static final String _keyword = "into";
+	private static final Action _action = Action.search;
+	private static final String _keyword = "topic";
 	private static final int _context = 5;
 	
 	public static void main(String[] args) {
@@ -23,7 +23,6 @@ private enum Action {search, print};
 	    CircularShifter shifter = new CircularShifter(indexes);
 	    Alphabetizer alphabetizer = new Alphabetizer();
 	    Output output = new Output();
-	    Search search = new Search();
 	    
 	    input.addObserver(shifter);
 	    indexes.addObserver(alphabetizer);
@@ -33,7 +32,7 @@ private enum Action {search, print};
 	    if( _action == Action.print ) {
 	    	output.print(input,indexes);
 	    } else if( _action == Action.search ) {
-	    	//search.search(_keyword,_context,input,indexes);
+	    	output.searchAndPrint(_keyword,_context,input,indexes);
 	    }
 	}
 	

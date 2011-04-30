@@ -112,12 +112,12 @@ public class CircularShifter {
 			
 			if( left.length < context && (line-1) >= 0 ) {
 				//not enough words on this line
-				res = getLeftContext(line-1,_input.getLine(line-1).length(),context-left.length) 
+				res = getLeftContext(line-1,_input.getWords(line-1).length,context-left.length) 
 					+ res;
 			}
 		} else {
 			if( (line-1) >= 0 ) {
-				res = getLeftContext(line-1,_input.getLine(line-1).length(),context);
+				res = getLeftContext(line-1,_input.getWords(line-1).length,context);
 			}
 		}
 

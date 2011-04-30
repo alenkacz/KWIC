@@ -54,7 +54,7 @@ public class Search {
 		List<Integer> res = new ArrayList<Integer>();
 		int start = index;
 		
-		while( index != 0 && _alpha.getWord(--start).toLowerCase().equals(text.toLowerCase()) ) {
+		while( index != 0 && start != 0 && _alpha.getWord(--start).toLowerCase().equals(text.toLowerCase()) ) {
 			res.add(start);
 		}
 		
@@ -72,7 +72,7 @@ public class Search {
 	 * Binary search
 	 */
 	private int findIndexOfString( String text, int left, int right ) {
-		if( left >= right ) return -1;
+		if( left > right ) return -1;
 		int middle = (left + right)/2;
 		
 		if( text.toLowerCase().compareTo(_alpha.getWord(middle).toLowerCase()) > 0 ) { // greater

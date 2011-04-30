@@ -2,9 +2,6 @@ package kwic_event;
 
 import java.util.List;
 
-import kwic_adt.Alphabetizer;
-import kwic_adt.Search;
-
 public class Output {
 	
 	LineStorage lines;
@@ -21,12 +18,12 @@ public class Output {
 	}
 	
 	public void searchAndPrint(String keyword, int context,LineStorage input, IndexStorage indexes) {
-		/*Search search = new Search(alpha);
+		Search search = new Search(input,indexes);
 		List<String> res = search.doSearch(keyword, context);
 		
 		for( String s : res ) {
 			System.out.println(s);
-		}*/
+		}
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
