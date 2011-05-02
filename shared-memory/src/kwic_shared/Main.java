@@ -5,26 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-
-import com.sun.tools.javac.util.Pair;
 
 public class Main {
 	
 	private static String _path = "";
-	private static List<String> _linesOfWords = new ArrayList<String>();
-	private static List<String> _result = new ArrayList<String>();
-	private static int _wordsCount = 0;
-	private static int[][] _index;
-	private static int[][] _shiftedIndex;
-	private static String[] _keywords;
-	private static Integer[] _alphaIndex;
-	private static final String[] _noiseWords = {"a","the","is"};
-	private static final char[] _separators = {',','.',':','-'};
+
+	private static LineStorage _lines = new LineStorage();
+	private static IndexStorage _indexStorage = new IndexStorage();
 	
 	private enum Action {search, print};
 	
@@ -60,49 +48,36 @@ public class Main {
 		try {
 			while ((line = reader.readLine()) != null) {
 	            if( !line.equals("") ) { // skip empty lines 
-	            	_linesOfWords.add(cleanWord(line.trim())); // and adding it to the list 
+	            	_lines.addLine(line.trim()); // and adding it to the list 
 	            }
 			}
 		} catch( IOException e ) {
 			printErrorAndExit();
 		}
-		
-		buildIndex();
-		
 	}
 
 	private static void doCircularShift() {
-		_shiftedIndex = new int[_wordsCount][2];
-		_keywords = new String[_wordsCount];
-		
-		int counter = 0;
-		
-		for( int i = 0; i < _index.length; i++ ) {
-			for( int j = 0; j < _index[i].length; j++ ) {
+		for( int i = 0; i < _lines.getLineCount(); i++ ) {
+			for( int j = 0; j < _lines.getTotalWordsCount(i); j++ ) {
 				// pair of a line number and word index
-				String word = getWord(i,_index[i][j]);
-				if( !isNoiseWord(word) ) { // filter noise words
-					_shiftedIndex[counter][0] = i;
-					_shiftedIndex[counter][1] = _index[i][j];
-					_keywords[counter] = word;
-					++counter;
+				String word = _lines.getWord(i,j);
+				if( !LineStorage.isNoiseWord(word) ) { // filter noise words
+					addNewKeyword(word, i, j);
 				}
 			}
 		}
 	}
 
 	private static void doAlphabetization() {
-		_alphaIndex = new Integer[_wordsCount];
-		for( int i = 0; i < _wordsCount; i++ ) { _alphaIndex[i] = i; }
-		
-		Arrays.sort(_alphaIndex,new Comparator<Integer>() {
-
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return _keywords[o1].compareToIgnoreCase(_keywords[o2]);
-			}
-			
-		});
+		for( int j = 0; j < _indexStorage.getSize(); j++ ) {
+			for( int i = 0; i < _indexStorage.getSize(); i++ ) {
+				if( _indexStorage.get(j).getKeyword().compareToIgnoreCase(_indexStorage.get(i).getKeyword()) <= 0) {
+					_indexStorage.insert(i,_indexStorage.get(j));
+					_indexStorage.delete(j+1);
+					break;
+				}
+			} 
+		}
 	}
 
 	private static void manageOutput() {
@@ -117,15 +92,24 @@ public class Main {
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////  SHIFTER ///////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static void addNewKeyword(String word, int line, int wordIndex) {
+		_indexStorage.add(word,line,wordIndex);
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////  OUTPUT ///////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static void printOutAllLines() {
-		int index = 0;
-		for( int i = 0; i < _alphaIndex.length; i++ ) {
-			index = _alphaIndex[i];
-			System.out.println(getShiftedLine(_shiftedIndex[index][0],_shiftedIndex[index][1]));
-		}	
+		int size = _indexStorage.getSize();
+		
+		for( int i = 0; i < size; ++i ) {
+			// printing each line
+			System.out.println(getLine(_indexStorage.get(i)));
+		}
 	}
 	
 	private static void printOutContext() {
@@ -135,13 +119,32 @@ public class Main {
 			System.out.println(s);
 		}
 	}
+	
+	private static String getLine(Index index) {
+		String res = "";
+		int wordIndex = index.getWordIndex();
+		
+		String[] words = _lines.getWords(index.getLineIndex());
+
+		res += words[wordIndex] + " ";
+		// from that word till the end
+		for( int i = wordIndex+1; i < words.length; i++ ) {
+			res += words[i] + " ";
+		}
+		// from start till that word
+		for( int i = 0; i < wordIndex; i++ ) {
+			res += words[i] + " ";
+		}
+		
+		return res;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////  SEARCH  ///////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static List<String> doSearch() {
-		List<Integer> indexes = findWordIndexes(_keyword,0,_alphaIndex.length);
+		List<Integer> indexes = findWordIndexes(_keyword,0,_indexStorage.getSize());
 		List<String> res = new ArrayList<String>();
 		
 		if( indexes != null ) {
@@ -178,13 +181,15 @@ public class Main {
 		List<Integer> res = new ArrayList<Integer>();
 		int start = index;
 		
-		while( index != 0 && getWord(_alphaIndex[--start]).toLowerCase().equals(text.toLowerCase()) ) {
+		while( index != 0 && start != 0 && _indexStorage.get(--start).getKeyword().toLowerCase()
+				.equals(text.toLowerCase()) ) {
 			res.add(start);
 		}
 		
 		start = index;
 		
-		while( index != (_alphaIndex.length - 1) && getWord(_alphaIndex[++start]).toLowerCase().equals(text.toLowerCase()) ) {
+		while( index != (_indexStorage.getSize() - 1) && 
+				_indexStorage.get(++start).getKeyword().toLowerCase().equals(text.toLowerCase()) ) {
 			res.add(start);
 		}
 		
@@ -195,12 +200,12 @@ public class Main {
 	 * Binary search
 	 */
 	private static int findIndexOfString( String text, int left, int right ) {
-		if( left >= right ) return -1;
+		if( left > right ) return -1;
 		int middle = (left + right)/2;
 		
-		if( text.toLowerCase().compareTo(getWord(_alphaIndex[middle]).toLowerCase()) > 0 ) { // greater
+		if( text.toLowerCase().compareTo(_indexStorage.get(middle).getKeyword().toLowerCase()) > 0 ) { // greater
 			return findIndexOfString(text,middle+1,right);
-		} else if( text.toLowerCase().compareTo(getWord(_alphaIndex[middle]).toLowerCase()) < 0 ) { // lower
+		} else if( text.toLowerCase().compareTo(_indexStorage.get(middle).getKeyword().toLowerCase()) < 0 ) { // lower
 			return findIndexOfString(text,left,middle-1);
 		} else { // the same
 			return middle;
@@ -208,20 +213,20 @@ public class Main {
 	}
 	
 	private static String getContextForIndex(int i) {
-		int line = _shiftedIndex[_alphaIndex[i]][0];
-		int index = _shiftedIndex[_alphaIndex[i]][1];
-		String word =  getWord(line,index);
+		int line = _indexStorage.get(i).getLineIndex();
+		int index = _indexStorage.get(i).getWordIndex();
+		String word =  _indexStorage.get(i).getKeyword();;
 		String res = getLeftContext(line,index,_context);
 		res += word + " ";
-		res += getRightContext(line,index+word.length()+1,_context);
+		res += getRightContext(line,index,_context);
 		
 		return res;
 	}
 	
 	private static String getRightContext(int line, int index, int context) {
 		String res = "";
-		if( index <  _linesOfWords.get(line).length()) {
-			String[] right = _linesOfWords.get(line).substring(index).split("\\s");
+		if( index <  _lines.getLine(line).length()) {
+			String[] right = _lines.getWordsToRightOf(line, index);
 			int counter = 0;
 			
 			for( String s : right ) {
@@ -231,12 +236,12 @@ public class Main {
 				}
 			}
 			
-			if( right.length < context && (line+1) < _linesOfWords.size() ) {
+			if( right.length < context && (line+1) < _lines.getLineCount() ) {
 				//not enough words on this line
 				res += getRightContext(line+1,0,context-right.length);
 			}
 		} else { // started at the end of line
-			if ((line+1) < _linesOfWords.size()) {
+			if ((line+1) < _lines.getLineCount()) {
 				res += getRightContext(line+1,0,context);
 			}
 		}
@@ -247,7 +252,7 @@ public class Main {
 	private static String getLeftContext(int line, int index, int context) {
 		String res = "";
 		if( index != 0 ) {
-			String[] left = _linesOfWords.get(line).substring(0,index).split("\\s");
+			String[] left = _lines.getWordsToLeftOf(line, index);
 			int counter = 0;
 			
 			for( int j = (left.length-1); j >= 0; j-- ) {
@@ -259,12 +264,12 @@ public class Main {
 			
 			if( left.length < context && (line-1) >= 0 ) {
 				//not enough words on this line
-				res = getLeftContext(line-1,_linesOfWords.get(line-1).length(),context-left.length) 
+				res = getLeftContext(line-1,_lines.getWords(line-1).length,context-left.length) 
 					+ res;
 			}
 		} else {
 			if( (line-1) >= 0 ) {
-				res = getLeftContext(line-1,_linesOfWords.get(line-1).length(),context);
+				res = getLeftContext(line-1,_lines.getWords(line-1).length,context);
 			}
 		}
 
@@ -275,93 +280,8 @@ public class Main {
 	////////////////////////////////////////  HELPERS ///////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private static boolean isNoiseWord(String word) {
-		for( String s : _noiseWords ) {
-			if( word.toLowerCase().equals(s) ) return true;
-		}
-		return false;
-	}
-	
-	/*
-	 * Cleans line from separators (removes commas etc.) and separates it only with one space
-	 */
-	private static String cleanWord(String s) {
-		String res = "";
-		String[] parts = s.split("\\s"); // split with whitespaces
-		boolean first = true;
-		
-		for( String part : parts ) {
-			String temp = part;
-			for( char sep : _separators ) {
-				// looking for separators in the beginning and in the end
-				if( part.charAt(0) == sep ) { //first one
-					temp = part.substring(1);
-				}
-				
-				if( part.charAt(part.length()-1) == sep ) { //last one
-					temp = part.substring(0,part.length()-1);
-				}
-			}
-			if( !first ) { res += " "; }
-			first = false;
-			res += temp;
-		}
-		return res;
-	}
-	
-	private static String getWord( int index ) {
-		int line = _shiftedIndex[index][0];
-		int i = _shiftedIndex[index][1];
-		return getWord(line,i);
-	}
-	
-	private static String getWord( int line, int index ) {
-		String l = _linesOfWords.get(line);
-		String substr = l.substring(index);
-		return substr.split("\\s")[0];
-	}
-	
-	private static String getShiftedLine(int line, int startIndex) {
-		String l = _linesOfWords.get(line);
-		String res = "";
-		
-		res = l.substring(startIndex);
-		res += " "; 
-		res += l.substring(0,startIndex);
-		
-		return res;
-	}
-	
-	/**
-	 * Builds index of original input text - each line has a set of word indexes, which indicates
-	 * indexes on each line where that word starts
-	 */
-	private static void buildIndex() {
-		_index = new int[_linesOfWords.size()][];
-		for( int i = 0; i < _linesOfWords.size(); ++i ) {
-			String[] words = _linesOfWords.get(i).split("\\s");
-			_index[i] = new int[words.length];
-			
-			_index[i][0] = 0; // first word is always on position 0 on the row
-			if( !isNoiseWord(words[0]) )++_wordsCount; // counter of words in the whole document
-			for( int j = 1; j < words.length; ++j ) {
-				// previous index + length of previous word + space
-				_index[i][j] = _index[i][j-1]+words[j-1].length()+1;
-				if( !isNoiseWord(words[j]) ) {
-					++_wordsCount;
-				}
-			}
-		}
-	}
-
 	private static void printErrorAndExit() {
 		System.err.println("Run program with one parameter - path of the input file");
         System.exit(1);	
 	}
-}
-
-class IgnoreCaseComparator implements Comparator<String> {
-  public int compare(String s1, String s2) {
-    return s1.compareToIgnoreCase(s2);
-  }
 }

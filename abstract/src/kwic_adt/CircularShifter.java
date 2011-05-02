@@ -11,8 +11,6 @@ public class CircularShifter {
 		_input = storage;
 		_indexes = index;
 		
-		int counter = 0;
-		
 		for( int i = 0; i < storage.getLineCount(); i++ ) {
 			for( int j = 0; j < storage.getTotalWordsCount(i); j++ ) {
 				// pair of a line number and word index
