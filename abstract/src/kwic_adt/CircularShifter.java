@@ -3,8 +3,11 @@ package kwic_adt;
 import java.util.ArrayList;
 import java.util.List;
 
+import kwic_event.IndexStorage;
+
 public class CircularShifter {
 	private LineStorage _input;
+	IndexStorage _indexes;
 	String[] _keywords;
 	int[][] _shiftedIndex;
 
