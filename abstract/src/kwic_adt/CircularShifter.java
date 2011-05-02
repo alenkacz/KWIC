@@ -3,18 +3,13 @@ package kwic_adt;
 import java.util.ArrayList;
 import java.util.List;
 
-import kwic_event.IndexStorage;
-
 public class CircularShifter {
 	private LineStorage _input;
 	IndexStorage _indexes;
-	String[] _keywords;
-	int[][] _shiftedIndex;
 
-	public void shift(LineStorage storage) {
+	public void shift(LineStorage storage, IndexStorage index) {
 		_input = storage;
-		_shiftedIndex = new int[storage.getWordsCount()][2];
-		_keywords = new String[storage.getWordsCount()];
+		_indexes = index;
 		
 		int counter = 0;
 		
@@ -23,13 +18,14 @@ public class CircularShifter {
 				// pair of a line number and word index
 				String word = storage.getWord(i,j);
 				if( !LineStorage.isNoiseWord(word) ) { // filter noise words
-					_shiftedIndex[counter][0] = i;
-					_shiftedIndex[counter][1] = j;
-					_keywords[counter] = word;
-					++counter;
+					addNewKeyword(word, i, j);
 				}
 			}
 		}
+	}
+	
+	private void addNewKeyword(String word, int line, int wordIndex) {
+		_indexes.add(word,line,wordIndex);
 	}
 	
 	public int getWordsCount() {
@@ -37,11 +33,11 @@ public class CircularShifter {
 	}
 	
 	public String getKeyword(int index) {
-		return _keywords[index];
+		return _indexes.get(index).getKeyword();
 	}
 
 	public String getShiftedLine(Integer index) {
-		return createShiftedLine(_shiftedIndex[index][0],_shiftedIndex[index][1]);
+		return createShiftedLine(_indexes.get(index).getLineIndex(),_indexes.get(index).getWordIndex());
 	}
 	
 	private String createShiftedLine(int line, int startIndex) {
@@ -63,15 +59,15 @@ public class CircularShifter {
 	}
 
 	public String getWord(Integer index) {
-		return _input.getWord(_shiftedIndex[index][0], _shiftedIndex[index][1]);
+		return _input.getWord(_indexes.get(index).getLineIndex(), _indexes.get(index).getWordIndex());
 	}
 
 	public int getLineNumber(Integer index) {
-		return _shiftedIndex[index][0];
+		return _indexes.get(index).getLineIndex();
 	}
 
 	public int getWordIndex(Integer index) {
-		return _shiftedIndex[index][1];
+		return _indexes.get(index).getWordIndex();
 	}
 	
 	public String getRightContext(int line, int index, int context) {

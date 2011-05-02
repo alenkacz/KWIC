@@ -13,19 +13,20 @@ public class Main {
 		if( args.length != 1 ) printErrorAndExit();
 		
 		LineStorage storage = new LineStorage();
+		IndexStorage indexStorage = new IndexStorage();
 		Input input = new Input();
 		CircularShifter shifter = new CircularShifter();
-		Alphabetizer alphabetizer = new Alphabetizer(shifter);
+		Alphabetizer alphabetizer = new Alphabetizer();
 		Output out = new Output();
 		
 		input.parse(storage,args[0]);
-		shifter.shift(storage);
-		alphabetizer.alpha();
+		shifter.shift(storage,indexStorage);
+		alphabetizer.alpha(indexStorage);
 		
 		if( _action == Action.print )
-			out.print(alphabetizer);
+			out.print(storage,indexStorage);
 		else
-			out.searchAndPrint(alphabetizer, _keyword, _context);
+			out.searchAndPrint(storage,indexStorage, _keyword, _context);
 	}
 	
 	private static void printErrorAndExit() {
