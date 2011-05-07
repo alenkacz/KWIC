@@ -1,6 +1,7 @@
 package pipeandfilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -16,9 +17,20 @@ public class AlphabetizeFilter extends Filter {
 	}
 
 	protected void transform() throws IOException {
-		List<String> lines = explodeString(getData());
-		Collections.sort(lines, new IgnoreCaseComparator());
-		setData(implodeString(lines));
+		List<String> lines = new ArrayList<String>();
+		while (true) {
+			String line = readLine();
+			if (line.equals("\n")) {
+				Collections.sort(lines, new IgnoreCaseComparator());
+				for (String out : lines) {
+					write(out);
+				}
+				break;
+			} else {
+				//System.out.println("A: " + line);
+				lines.add(line);
+			}
+		}
 	}
 
 }

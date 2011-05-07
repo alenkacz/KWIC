@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-	private static String _path = "input.txt";
+	private static String mPath = "input.txt";
 
     /**
      * @param args the command line arguments
@@ -21,24 +21,19 @@ public class Main {
 			- nebylo by lepší, kdyby se všechno spouštělo na konci konstruktoru ->
 			nepsalo by se run a bylo by zajištěný správný pořadí
 		 */
-
-		Pipe p1 = new Pipe();
-		Pipe p2 = new Pipe();
-		Pipe p3 = new Pipe();
-
-		Input input = new Input(_path, p1);
-		CircularShiftFilter c = new CircularShiftFilter(p1, p2);
-		AlphabetizeFilter a = new AlphabetizeFilter(p2, p3);
-		Output output = new Output(p3);
 		
 		try {
-			input.run();
-			c.run();
-			a.run();
-			output.run();
+			Pipe p1 = new Pipe();
+			Pipe p2 = new Pipe();
+			Pipe p3 = new Pipe();
+
+			new Thread(new Input(mPath, p1)).start();
+			new Thread(new CircularShiftFilter(p1, p2)).start();
+			new Thread(new AlphabetizeFilter(p2, p3)).start();
+			new Thread(new Output(p3)).start();
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		} 
 
     }
 

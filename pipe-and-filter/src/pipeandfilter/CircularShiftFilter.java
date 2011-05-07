@@ -15,22 +15,19 @@ public class CircularShiftFilter extends Filter {
 	}
 
 	protected void transform() throws IOException {
-		List<String> lines = explodeString(getData());
-		List<String> result = doCircularShift(lines);
-		setData(implodeString(result));
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////
-
-	private List<String> doCircularShift(List<String> lines) {
-		List<String> result = new ArrayList<String>();		
-		for (String line : lines) {
-			result.addAll(getCircularShifts(line));
+		while (true) {
+			String origLine = readLine();
+			if (origLine.equals("\n")) {
+				write("\n");
+				break;
+			} else {
+				//System.out.println("R: " + origLine);
+				for (String line : getCircularShifts(origLine)) {
+					//System.out.println("C: " + line);
+					write(line + '\n');
+				}
+			}
 		}
-
-		return result;
 	}
 
 	private List<String> getCircularShifts(String line) {
