@@ -26,11 +26,13 @@ public class Main {
 			Pipe p1 = new Pipe();
 			Pipe p2 = new Pipe();
 			Pipe p3 = new Pipe();
+			Pipe p4 = new Pipe();
 
 			new Thread(new Input(mPath, p1)).start();
 			new Thread(new CircularShiftFilter(p1, p2)).start();
-			new Thread(new AlphabetizeFilter(p2, p3)).start();
-			new Thread(new Output(p3)).start();
+			new Thread(new NoiseFilter(p2, p3)).start();
+			new Thread(new AlphabetizeFilter(p3, p4)).start();
+			new Thread(new Output(p4)).start();
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		} 
