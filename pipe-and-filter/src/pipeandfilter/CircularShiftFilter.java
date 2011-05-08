@@ -15,17 +15,14 @@ public class CircularShiftFilter extends Filter {
 	}
 
 	protected void transform() throws IOException {
-		while (true) {
-			String origLine = readLine();
-			if (origLine.equals("\n")) {
-				write("\n");
-				break;
-			} else {
-				//System.out.println("R: " + origLine);
-				for (String line : getCircularShifts(origLine)) {
-					//System.out.println("C: " + line);
-					write(line + '\n');
-				}
+		String origLine = readLine();
+		if (origLine.equals("\n")) {
+			write("\n");
+		} else {
+			//System.out.println("R: " + origLine);
+			for (String line : getCircularShifts(origLine)) {
+				//System.out.println("C: " + line);
+				write(line + '\n');
 			}
 		}
 	}

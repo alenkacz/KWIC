@@ -22,7 +22,9 @@ abstract class Filter implements Runnable {
 
 	public void run() {
 		try {
-			transform();
+			while (true) {
+				transform();
+			}
 		} catch (IOException ex) {
 			// input stream closed
 		}

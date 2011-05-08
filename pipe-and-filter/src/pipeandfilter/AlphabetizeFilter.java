@@ -12,24 +12,22 @@ import java.util.List;
  */
 public class AlphabetizeFilter extends Filter {
 
+	List<String> lines = new ArrayList<String>();
+
 	AlphabetizeFilter(Pipe input, Pipe output) {
 		super(input, output);
 	}
 
 	protected void transform() throws IOException {
-		List<String> lines = new ArrayList<String>();
-		while (true) {
-			String line = readLine();
-			if (line.equals("\n")) {
-				Collections.sort(lines, new IgnoreCaseComparator());
-				for (String out : lines) {
-					write(out);
-				}
-				break;
-			} else {
-				//System.out.println("A: " + line);
-				lines.add(line);
+		String line = readLine();
+		if (line.equals("\n")) {
+			Collections.sort(lines, new IgnoreCaseComparator());
+			for (String out : lines) {
+				write(out);
 			}
+		} else {
+			//System.out.println("A: " + line);
+			lines.add(line);
 		}
 	}
 
