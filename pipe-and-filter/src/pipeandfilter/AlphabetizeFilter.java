@@ -25,8 +25,8 @@ public class AlphabetizeFilter extends Filter {
 			for (String out : lines) {
 				write(out);
 			}
+			write("\n");
 		} else {
-			//System.out.println("A: " + line);
 			lines.add(line);
 		}
 	}
