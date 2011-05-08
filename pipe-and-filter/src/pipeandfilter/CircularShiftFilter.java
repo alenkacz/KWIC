@@ -31,6 +31,7 @@ public class CircularShiftFilter extends Filter {
 		List<String> result = new ArrayList<String>();
 		String[] words = line.split("\\s"); // spliting line with whitespaces
 		for (int i = 0; i < words.length; i++) {
+			if (words[i].equals("")) continue;
 			String string = words[i] + " "; // "first word"
 			for (int j = i+1; j < words.length; j++) { // words after "first word"
 				string += words[j] + " ";
