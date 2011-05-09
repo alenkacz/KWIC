@@ -1,71 +1,60 @@
 package pipeandfilter;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author Vasek
  */
-abstract class Filter {
+abstract class Filter implements Runnable {
 
-	private String _data;
-
-	private Pipe _input;
-	private Pipe _output;
+	private Pipe mInput;
+	private Pipe mOutput;
 
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 
 	public Filter(Pipe input, Pipe output) {
-		_input = input;
-		_output = output;
+		this.mInput = input;
+		this.mOutput = output;
 	}
 
-	public void run() throws IOException {
-		_data = _input.read();
-		transform();
-		_output.write(_data);
+	public void run() {
+		try {
+			while (true) {
+				transform();
+			}
+		} catch (IOException ex) {
+			// input stream closed
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
-
-	protected String getData() {
-		return _data;
-	}
-
-	protected void setData(String data) {
-		_data = data;
-	}
 
 	abstract protected void transform() throws IOException;
 
-	protected List<String> explodeString(String str) throws IOException {
-		List<String> lines = new ArrayList<String>();
-		BufferedReader reader = new BufferedReader(new StringReader(str));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.length() > 0) {
-				lines.add(line);
-			}
-		}
-
-		return lines;
+	protected char read() throws IOException {
+		return (char) mInput.read();
 	}
 
-	protected String implodeString(List<String> lines) {
-		String result = "";
-		for (String line : lines) {
-			result = result + line + "\n";
+	protected String readLine() throws IOException {
+		String out = "";
+		int c = mInput.read();
+		while(true) {
+			char ch = (char) c;
+			out += ch;
+			if (ch == '\n') break;
+			c = mInput.read();
 		}
 
-		return result;
+		return out;
+	}
+
+	protected void write(String str) throws IOException {
+		mOutput.write(str);
 	}
 
 }

@@ -1,23 +1,31 @@
 package pipeandfilter;
 
+import java.io.IOException;
+
 /**
  *
  * @author Vasek
  */
-public class Output {
+public class Output implements Runnable {
 
-	private Pipe _input;
+	private Pipe mInput;
 
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 
 	public Output(Pipe input) {
-		_input = input;
+		mInput = input;
 	}
 
 	public void run() {
-		System.out.println(_input.read());
+		try {
+			while (true) {
+				System.out.print((char) mInput.read());
+			}
+		} catch (IOException ex) {
+			// input stream closed
+		}
 	}
 
 }
